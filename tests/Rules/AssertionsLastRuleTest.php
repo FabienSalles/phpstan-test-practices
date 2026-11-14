@@ -17,7 +17,7 @@ final class AssertionsLastRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new AssertionsLastRule('error');
+        return new AssertionsLastRule('error', 'max');
     }
 
     public function testFlagsStatementsAfterAnAssertionAndAssertionsHiddenInTheArrange(): void

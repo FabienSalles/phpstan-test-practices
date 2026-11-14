@@ -17,7 +17,7 @@ final class NoGuardAssertionRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new NoGuardAssertionRule('error');
+        return new NoGuardAssertionRule('error', 'max');
     }
 
     public function testFlagsGuardsThatPrecedeTheFinalAssertion(): void

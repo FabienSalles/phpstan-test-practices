@@ -19,7 +19,7 @@ final class AssertionCountRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new AssertionCountRule(3, 4);
+        return new AssertionCountRule(3, 4, 'max');
     }
 
     public function testReportsThreeAssertionsOrMore(): void

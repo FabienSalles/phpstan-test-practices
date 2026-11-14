@@ -22,7 +22,7 @@ final class PreferInMemoryDoubleRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new PreferInMemoryDoubleRule($this->threshold, 'warning');
+        return new PreferInMemoryDoubleRule($this->threshold, 'warning', 'max');
     }
 
     protected function getCollectors(): array

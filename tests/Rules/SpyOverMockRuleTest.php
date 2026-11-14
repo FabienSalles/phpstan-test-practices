@@ -17,7 +17,7 @@ final class SpyOverMockRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new SpyOverMockRule('warning');
+        return new SpyOverMockRule('warning', 'max');
     }
 
     public function testFlagsVerificationsSetBeforeTheActButNotSpies(): void

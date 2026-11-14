@@ -18,7 +18,7 @@ final class NoProductionConstantAsExpectedRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new NoProductionConstantAsExpectedRule(self::createReflectionProvider(), 'error');
+        return new NoProductionConstantAsExpectedRule(self::createReflectionProvider(), 'error', 'max');
     }
 
     public function testFlagsProductionConstantsOnlyInTheExpectedPositionOfAnAssertion(): void

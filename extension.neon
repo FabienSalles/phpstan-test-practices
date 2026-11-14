@@ -1,6 +1,7 @@
 parameters:
     errorFormat: testPractices
     testPractices:
+        level: max
         errorFormat: table
         severity:
             assertionsLast: error
@@ -18,6 +19,7 @@ parameters:
 
 parametersSchema:
     testPractices: structure({
+        level: anyOf(schema(int(), min(0), max(3)), 'max'),
         errorFormat: string(),
         severity: structure({
             assertionsLast: anyOf('error', 'warning'),
@@ -47,6 +49,7 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\AssertionsLastRule
         arguments:
             severity: %testPractices.severity.assertionsLast%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule
 
@@ -54,6 +57,7 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\NoGuardAssertionRule
         arguments:
             severity: %testPractices.severity.noGuardAssertion%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule
 
@@ -61,6 +65,7 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\NoComputedExpectedValueRule
         arguments:
             severity: %testPractices.severity.noComputedExpectedValue%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule
 
@@ -68,6 +73,7 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\NoProductionConstantAsExpectedRule
         arguments:
             severity: %testPractices.severity.noProductionConstantAsExpected%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule
 
@@ -75,6 +81,7 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\OneVerifiedDoublePerTestRule
         arguments:
             severity: %testPractices.severity.oneVerifiedDoublePerTest%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule
 
@@ -82,6 +89,7 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\SpyOverMockRule
         arguments:
             severity: %testPractices.severity.spyOverMock%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule
 
@@ -100,6 +108,7 @@ services:
         arguments:
             threshold: %testPractices.preferInMemoryDouble.threshold%
             severity: %testPractices.severity.preferInMemoryDouble%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule
 
@@ -108,5 +117,6 @@ services:
         arguments:
             warningFrom: %testPractices.assertionCount.warningFrom%
             errorFrom: %testPractices.assertionCount.errorFrom%
+            level: %testPractices.level%
         tags:
             - phpstan.rules.rule

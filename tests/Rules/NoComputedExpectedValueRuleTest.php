@@ -17,7 +17,7 @@ final class NoComputedExpectedValueRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new NoComputedExpectedValueRule('error');
+        return new NoComputedExpectedValueRule('error', 'max');
     }
 
     public function testFlagsExpectedValuesComputedInTheTest(): void

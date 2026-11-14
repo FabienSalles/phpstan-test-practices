@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FabienSalles\PHPStanTestPractices\Rules;
 
+use FabienSalles\PHPStanTestPractices\Level;
 use FabienSalles\PHPStanTestPractices\Severity\Severity;
 use FabienSalles\PHPStanTestPractices\TestMethod;
 use PhpParser\Node;
@@ -19,9 +20,12 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final readonly class NoProductionConstantAsExpectedRule implements Rule
 {
+    public const LEVEL = 1;
+
     public function __construct(
         private ReflectionProvider $reflectionProvider,
         private string $severity,
+        private int|string $level,
     ) {
     }
 
@@ -32,6 +36,10 @@ final readonly class NoProductionConstantAsExpectedRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        if (!Level::enables($this->level, self::LEVEL)) {
+            return [];
+        }
+
         $class = $scope->getClassReflection();
         if (!TestMethod::isPhpUnitAssertion($node) || $class === null || !TestMethod::isTestCase($class) || $node->isFirstClassCallable()) {
             return [];

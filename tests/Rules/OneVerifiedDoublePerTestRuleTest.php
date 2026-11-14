@@ -17,7 +17,7 @@ final class OneVerifiedDoublePerTestRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return new OneVerifiedDoublePerTestRule('error');
+        return new OneVerifiedDoublePerTestRule('error', 'max');
     }
 
     public function testFlagsTestsVerifyingSeveralDoublesWithPhpUnitOrProphecy(): void

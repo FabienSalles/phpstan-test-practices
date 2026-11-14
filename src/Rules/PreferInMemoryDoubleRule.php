@@ -6,6 +6,7 @@ namespace FabienSalles\PHPStanTestPractices\Rules;
 
 use FabienSalles\PHPStanTestPractices\Collectors\TestCaseCollector;
 use FabienSalles\PHPStanTestPractices\Collectors\TestDoubleCollector;
+use FabienSalles\PHPStanTestPractices\Level;
 use FabienSalles\PHPStanTestPractices\Severity\Severity;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -20,9 +21,12 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final readonly class PreferInMemoryDoubleRule implements Rule
 {
+    public const LEVEL = 3;
+
     public function __construct(
         private int $threshold,
         private string $severity,
+        private int|string $level,
     ) {
     }
 
@@ -33,6 +37,10 @@ final readonly class PreferInMemoryDoubleRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        if (!Level::enables($this->level, self::LEVEL)) {
+            return [];
+        }
+
         $declared = [];
         foreach ($node->get(TestDoubleCollector::class) as $methods) {
             foreach ($methods as $method) {

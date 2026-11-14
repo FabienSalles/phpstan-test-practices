@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FabienSalles\PHPStanTestPractices\Rules;
 
+use FabienSalles\PHPStanTestPractices\Level;
 use FabienSalles\PHPStanTestPractices\Severity\Severity;
 use FabienSalles\PHPStanTestPractices\TestMethod;
 use PhpParser\Node;
@@ -20,8 +21,11 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final readonly class AssertionsLastRule implements Rule
 {
+    public const LEVEL = 0;
+
     public function __construct(
         private string $severity,
+        private int|string $level,
     ) {
     }
 
@@ -32,6 +36,10 @@ final readonly class AssertionsLastRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        if (!Level::enables($this->level, self::LEVEL)) {
+            return [];
+        }
+
         $method = $node->getOriginalNode();
         if (!TestMethod::isTest($method, $node->getClassReflection())) {
             return [];
