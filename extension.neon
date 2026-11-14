@@ -1,5 +1,7 @@
 parameters:
+    errorFormat: testPractices
     testPractices:
+        errorFormat: table
         severity:
             assertionsLast: error
             noGuardAssertion: error
@@ -10,6 +12,7 @@ parameters:
 
 parametersSchema:
     testPractices: structure({
+        errorFormat: string(),
         severity: structure({
             assertionsLast: anyOf('error', 'warning'),
             noGuardAssertion: anyOf('error', 'warning'),
@@ -21,6 +24,11 @@ parametersSchema:
     })
 
 services:
+    errorFormatter.testPractices:
+        class: FabienSalles\PHPStanTestPractices\Severity\SeverityErrorFormatter
+        arguments:
+            innerFormat: %testPractices.errorFormat%
+
     -
         class: FabienSalles\PHPStanTestPractices\Rules\AssertionsLastRule
         arguments:
