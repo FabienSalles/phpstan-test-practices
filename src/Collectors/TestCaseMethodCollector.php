@@ -18,17 +18,6 @@ use PHPStan\Node\InClassMethodNode;
  */
 final readonly class TestCaseMethodCollector implements Collector
 {
-    private const FACTORIES = [
-        'createconfiguredmock',
-        'createconfiguredstub',
-        'createmock',
-        'createpartialmock',
-        'createstub',
-        'getmockbuilder',
-        'getmockforabstractclass',
-        'prophesize',
-    ];
-
     public function getNodeType(): string
     {
         return InClassMethodNode::class;
@@ -44,8 +33,8 @@ final readonly class TestCaseMethodCollector implements Collector
         $method = $node->getOriginalNode();
         $file = $scope->getTraitReflection()?->getFileName() ?? $scope->getFile();
         $doubles = [];
-        foreach (TestMethod::find($method->stmts ?? [], self::isDoubleFactory(...)) as $call) {
-            $dependency = self::doubledClass($call, $class->getName());
+        foreach (TestMethod::find($method->stmts ?? [], TestMethod::isDoubleFactory(...)) as $call) {
+            $dependency = TestMethod::doubledClass($call, $class->getName());
             if ($dependency !== null) {
                 $doubles[] = ['dependency' => $dependency, 'file' => $file, 'line' => $call->getStartLine()];
             }
@@ -115,35 +104,6 @@ final readonly class TestCaseMethodCollector implements Collector
 
         return ($node instanceof Expr\MethodCall && self::isThis($node->var))
             || ($node instanceof Expr\StaticCall && $node->class instanceof Node\Name && in_array($node->class->toLowerString(), ['self', 'static'], true));
-    }
-
-    private static function isDoubleFactory(Node $node): bool
-    {
-        if (!in_array(strtolower(TestMethod::callName($node) ?? ''), self::FACTORIES, true)) {
-            return false;
-        }
-
-        return $node instanceof Expr\StaticCall || ($node instanceof Expr\MethodCall && self::isThis($node->var));
-    }
-
-    private static function doubledClass(Node $call, string $testClass): ?string
-    {
-        if (!$call instanceof Expr\CallLike || $call->isFirstClassCallable()) {
-            return null;
-        }
-
-        $argument = $call->getArgs()[0]->value ?? null;
-        if (!$argument instanceof Expr\ClassConstFetch || !$argument->class instanceof Node\Name || !$argument->name instanceof Node\Identifier) {
-            return null;
-        }
-
-        if ($argument->name->toLowerString() !== 'class') {
-            return null;
-        }
-
-        $name = $argument->class->toString();
-
-        return in_array(strtolower($name), ['self', 'static'], true) ? $testClass : ltrim($name, '\\');
     }
 
     private static function isThis(Expr $expr): bool

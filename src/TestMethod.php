@@ -23,6 +23,16 @@ final class TestMethod
         'PHPUnit\Framework\Attributes\PostCondition',
         'PHPUnit\Framework\Attributes\PreCondition',
     ];
+    private const DOUBLE_FACTORIES = [
+        'createconfiguredmock',
+        'createconfiguredstub',
+        'createmock',
+        'createpartialmock',
+        'createstub',
+        'getmockbuilder',
+        'getmockforabstractclass',
+        'prophesize',
+    ];
     private const SPY_VERIFICATIONS = [
         'shouldhave',
         'shouldhavebeencalled',
@@ -168,6 +178,92 @@ final class TestMethod
         $method->stmts = array_values($stmts);
 
         return $method;
+    }
+
+    public static function isDoubleFactory(Node $node): bool
+    {
+        if (!in_array(strtolower(self::callName($node) ?? ''), self::DOUBLE_FACTORIES, true)) {
+            return false;
+        }
+
+        return $node instanceof Expr\StaticCall || ($node instanceof Expr\MethodCall && self::isThis($node->var));
+    }
+
+    public static function doubledClass(Node $call, string $testClass): ?string
+    {
+        if (!$call instanceof Expr\CallLike || $call->isFirstClassCallable()) {
+            return null;
+        }
+
+        $argument = $call->getArgs()[0]->value ?? null;
+        if (!$argument instanceof Expr\ClassConstFetch || !$argument->class instanceof Node\Name || !$argument->name instanceof Node\Identifier) {
+            return null;
+        }
+
+        if ($argument->name->toLowerString() !== 'class') {
+            return null;
+        }
+
+        $name = $argument->class->toString();
+
+        return in_array(strtolower($name), ['self', 'static'], true) ? $testClass : ltrim($name, '\\');
+    }
+
+    /**
+     * @param Node|array<Node> $nodes
+     * @param callable(Node): bool $filter
+     * @return list<Node>
+     */
+    public static function findOutsideClosures(Node|array $nodes, callable $filter): array
+    {
+        $found = [];
+        foreach (is_array($nodes) ? $nodes : [$nodes] as $node) {
+            if ($node instanceof Expr\Closure || $node instanceof Expr\ArrowFunction || $node instanceof Stmt\Class_) {
+                continue;
+            }
+
+            if ($filter($node)) {
+                $found[] = $node;
+            }
+
+            foreach ($node->getSubNodeNames() as $name) {
+                $child = $node->{$name};
+                $children = array_values(array_filter(is_array($child) ? $child : [$child], static fn (mixed $item): bool => $item instanceof Node));
+                $found = [...$found, ...self::findOutsideClosures($children, $filter)];
+            }
+        }
+
+        return $found;
+    }
+
+    public static function expectedArgument(Expr\CallLike $call, ClassReflection $class): ?Expr
+    {
+        $method = (string) self::callName($call);
+        if ($call->isFirstClassCallable() || !$class->hasNativeMethod($method)) {
+            return null;
+        }
+
+        $parameter = $class->getNativeMethod($method)->getOnlyVariant()->getParameters()[0] ?? null;
+        if ($parameter === null || !str_starts_with($parameter->getName(), 'expected')) {
+            return null;
+        }
+
+        foreach ($call->getArgs() as $position => $argument) {
+            if ($argument->name?->toString() === $parameter->getName() || ($position === 0 && $argument->name === null && !$argument->unpack)) {
+                return $argument->value;
+            }
+        }
+
+        return null;
+    }
+
+    public static function rootVariable(Expr $expr): ?string
+    {
+        while ($expr instanceof Expr\MethodCall || $expr instanceof Expr\PropertyFetch || $expr instanceof Expr\ArrayDimFetch || $expr instanceof Expr\NullsafeMethodCall || $expr instanceof Expr\NullsafePropertyFetch) {
+            $expr = $expr->var;
+        }
+
+        return $expr instanceof Expr\Variable && is_string($expr->name) && $expr->name !== 'this' ? $expr->name : null;
     }
 
     public static function verifiedDouble(Expr\MethodCall $call): ?string
