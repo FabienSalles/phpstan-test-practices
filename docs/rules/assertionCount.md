@@ -2,6 +2,8 @@
 
 Assertion count. Enabled from `testPractices.level` **2** (see [levels](../../README.md#levels)).
 
+Auto-fixable: no. Merging assertions into one structured assertion needs to know which values belong together.
+
 ## What it detects
 
 The number of assertions in a test method, anywhere in its body. An assertion nested in another one (an `Argument::that()` inside a spy verification) is not counted again. 1 is preferred, 2 is allowed, `warningFrom` (3) is a warning and `errorFrom` (4) an error.

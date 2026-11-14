@@ -2,6 +2,8 @@
 
 Prefer an in-memory double. Enabled from `testPractices.level` **3** (see [levels](../../README.md#levels)).
 
+Auto-fixable: no. Writing the in-memory implementation is a design task.
+
 ## What it detects
 
 A dependency doubled with `createMock`, `createStub`, `createConfiguredMock`, `createConfiguredStub`, `createPartialMock`, `getMockBuilder`, `getMockForAbstractClass` or `prophesize` on `X::class` in at least `threshold` test methods (2 by default) of the same concrete test class.

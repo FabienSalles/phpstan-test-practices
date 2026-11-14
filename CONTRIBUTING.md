@@ -28,6 +28,7 @@ make analyse                     # PHPStan only
 - `tests/Rules/`: one `PHPStan\Testing\RuleTestCase` per rule, analysing a fixture from `tests/Fixtures/Rules/`. Fixture classes are autoloaded through the `autoload-dev` classmap; run `composer dump-autoload` after adding a fixture file.
 - `tests/Severity/`: runs the real `vendor/bin/phpstan` on `tests/Fixtures/Severity/` and asserts the exit codes of the severity formatter.
 - `tests/Corpus/`: runs the real binary on the training corpus in `tests/Fixtures/Corpus/` and pins every finding (file, line, identifier). A rule change that moves a finding shows up here.
+- Auto-fixes: a rule adds its fix with `RuleErrorBuilder::fixNode()`, and its `RuleTestCase` calls `$this->fix()` on a fixture of `tests/Fixtures/Fix/` and its expected result `<Fixture>.php.fixed` (the `.fixed` extension keeps it out of the classmap). Fix on the class method node rather than removing a statement directly: PHPStan 2.1.41 has no `removeNode()`, and its fix callback must return a node.
 - `tests/Adoption/`: runs the real binary to pin the baseline, the levels and the diff mode (in a temporary git repository).
 - `tests/Docs/`: runs the real binary on `tests/Fixtures/Docs/<rule>/` and checks that `docs/rules/<rule>.md` shows both fixtures verbatim and the exact `raw` output of the failing one. After changing a message, paste the new output in the page.
 

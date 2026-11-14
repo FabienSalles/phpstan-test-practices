@@ -2,6 +2,8 @@
 
 One verified double per test. Enabled from `testPractices.level` **2** (see [levels](../../README.md#levels)).
 
+Auto-fixable: no. Splitting a test into one test per intention needs names and a choice of which collaborators become stubs.
+
 ## What it detects
 
 A test method that verifies more than one double. A verified double is a variable or property carrying a PHPUnit `expects()`, a Prophecy expectation (`shouldBeCalled*()`, `shouldNotBeCalled()`, `should()`) or a Prophecy spy verification (`shouldHaveBeenCalled*()`, `shouldNotHaveBeenCalled()`, `shouldHave()`). Stubs (`willReturn()`, `method()`) do not count.

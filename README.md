@@ -114,6 +114,8 @@ Each rule has its own page: what it detects, a failing example with the real PHP
 | [`testPractices.spyOverMock`](docs/rules/spyOverMock.md) | 3 | warning | A verification set before the act (mock) breaks arrange-act-assert; a spy verifies after the act |
 | [`testPractices.preferInMemoryDouble`](docs/rules/preferInMemoryDouble.md) | 3 | warning | The same dependency doubled in several tests is a sign that a reusable in-memory implementation would be shorter and sturdier |
 
+Three rules can fix what they report: `noProductionConstantAsExpected` (the constant becomes its literal value), `noGuardAssertion` (the guard is removed) and `spyOverMock` for Prophecy expectations (moved after the act as a spy verification). Run `vendor/bin/phpstan analyse --fix`, review the diff, and rerun your code style fixer: PHPStan's printer may drop a blank line around a changed statement. Each rule page says whether it is auto-fixable and why.
+
 ## Levels
 
 `testPractices.level` selects the rules, from the ones that catch tests passing by construction to the opinionated ones:

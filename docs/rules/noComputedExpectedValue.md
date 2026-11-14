@@ -2,6 +2,8 @@
 
 No computed expected value. Enabled from `testPractices.level` **0** (see [levels](../../README.md#levels)).
 
+Auto-fixable: no. The literal would have to be computed by running the formula, which is exactly what the test must not trust.
+
 ## What it detects
 
 An `assertSame()` or `assertEquals()` whose expected value (the first argument, or the variable assigned to it in the test) contains a `match`, a ternary, or arithmetic (`+`, `-`, `*`, `/`, `%`, `**`).

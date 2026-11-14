@@ -2,6 +2,8 @@
 
 Assertions last. Enabled from `testPractices.level` **0** (see [levels](../../README.md#levels)).
 
+Auto-fixable: no. Moving a statement before the assertions can change what the test checks; splitting the test needs a name and an intention only a human knows.
+
 ## What it detects
 
 Every top-level statement of a test method that comes after its first assertion, and any assertion hidden in a closure, an arrow function or an anonymous class of the arrange (a `willReturnCallback()`, a custom double...). An assertion inside `Argument::that()` within a Prophecy spy verification belongs to the final block and stays allowed.
