@@ -16,11 +16,12 @@ Without a local PHP, the Makefile runs the same commands in Docker (the image is
 ```bash
 make ci                          # PHP 8.4, highest dependencies
 make ci PHP=8.2 DEPS=lowest      # the lowest leg of the CI matrix
+make ci PHP=8.3 PHPUNIT=12.0     # pin PHPUnit to ^12.0 (^11.5 with PHPUNIT=11.5)
 make test                        # PHPUnit only, on the vendor/ already installed
 make analyse                     # PHPStan only
 ```
 
-`composer ci` is the entry point the GitHub Actions workflow runs on each leg of its matrix (PHP 8.2, 8.3, 8.4 × lowest, highest dependencies).
+`composer ci` is the entry point the GitHub Actions workflow runs on each leg of its matrix (PHP 8.2, 8.3, 8.4 × lowest, highest dependencies × PHPUnit 11.5, 12.0, without PHP 8.2 on PHPUnit 12, which requires PHP 8.3).
 
 ## Tests
 

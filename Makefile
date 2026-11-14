@@ -1,5 +1,6 @@
 PHP ?= 8.4
 DEPS ?= highest
+PHPUNIT ?=
 IMAGE = phpstan-test-practices:$(PHP)
 DOCKER = docker run --rm -v "$(CURDIR)":/app -v phpstan-test-practices-composer:/root/.composer/cache $(IMAGE)
 
@@ -9,7 +10,7 @@ image:
 	docker build --build-arg PHP_VERSION=$(PHP) -t $(IMAGE) docker/
 
 install: image
-	$(DOCKER) composer update --no-interaction --no-progress $(if $(filter lowest,$(DEPS)),--prefer-lowest)
+	$(DOCKER) composer update --no-interaction --no-progress $(if $(filter lowest,$(DEPS)),--prefer-lowest) $(if $(PHPUNIT),--with phpunit/phpunit:^$(PHPUNIT))
 
 ci: install
 	$(DOCKER) composer ci

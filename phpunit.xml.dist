@@ -7,6 +7,9 @@
          failOnRisky="true"
          failOnWarning="true"
          failOnDeprecation="true">
+    <php>
+        <ini name="memory_limit" value="512M"/>
+    </php>
     <testsuites>
         <testsuite name="rules">
             <directory>tests</directory>

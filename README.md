@@ -276,11 +276,14 @@ Tested in this repository's CI matrix and locally with Docker:
 |---|---|---|
 | PHP | 8.2 | 8.4 |
 | PHPStan | 2.1.0 | 2.3.5 |
-| PHPUnit (fixtures and test suite) | 11.5.50 | 11.5.58 |
+| PHPUnit 11 (fixtures and test suite) | 11.5.50 | 11.5.58 |
+| PHPUnit 12 (fixtures and test suite, PHP 8.3+) | 12.5.8 | 12.5.44 |
 | Prophecy (`phpspec/prophecy`) | 1.19.0 | 1.26.1 |
 | `phpspec/prophecy-phpunit` | 2.3.0 | 2.5.0 |
 
-The rules read the syntax of PHPUnit and Prophecy calls; they do not depend on a PHPUnit or Prophecy version at runtime. PHPUnit 12 is not part of the matrix.
+The matrix runs PHP 8.2 with PHPUnit 11, and PHP 8.3 and 8.4 with both PHPUnit 11 and 12, each with lowest and highest dependencies. The lowest PHPUnit versions are the oldest ones Composer installs: earlier releases are blocked by a security advisory.
+
+The rules read the syntax of PHPUnit and Prophecy calls; they do not depend on a PHPUnit or Prophecy version at runtime. PHPUnit 12 no longer reads the `@test` annotation, but the rules still treat a method carrying it as a test.
 
 ## License
 
