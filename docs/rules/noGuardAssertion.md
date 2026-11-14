@@ -2,6 +2,8 @@
 
 No guard assertion. Enabled from `testPractices.level` **1** (see [levels](../../README.md#levels)).
 
+Auto-fixable: yes. `vendor/bin/phpstan analyse --fix` removes the guard statement. The printer also drops the blank line in front of the removed statement; rerun your code style fixer if it matters.
+
 ## What it detects
 
 An assertion used as a guard before the final assertion of a test: `assertCount`, `assertInstanceOf`, `assertNotNull`, `assertNotEmpty`, `assertNotFalse`, `assertArrayHasKey`, `assertObjectHasProperty` and every `assertIs*` (`assertIsArray`, `assertIsString`...), when another assertion follows. The same assertion as the last one of the test is the real expectation and is not reported.

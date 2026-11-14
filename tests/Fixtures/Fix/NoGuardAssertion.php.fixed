@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Fixtures\Fix\NoGuardAssertion;
+
+use PHPUnit\Framework\TestCase;
+
+final class GuardTest extends TestCase
+{
+    public function testDropsTheGuards(): void
+    {
+        $lines = ['BOOK-1'];
+        self::assertSame(['BOOK-1'], $lines);
+    }
+}

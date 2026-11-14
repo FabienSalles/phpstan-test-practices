@@ -30,4 +30,9 @@ final class NoGuardAssertionRuleTest extends RuleTestCase
             ['Test testGuardBeforeAFinalAssertionFedByAProvider() calls assertNotEmpty() as a guard before the final assertion. Drop the guard and let the final assertion show the full diff.', 53, self::TIP],
         ]);
     }
+
+    public function testRemovesTheGuards(): void
+    {
+        $this->fix(__DIR__ . '/../Fixtures/Fix/NoGuardAssertion.php', __DIR__ . '/../Fixtures/Fix/NoGuardAssertion.php.fixed');
+    }
 }

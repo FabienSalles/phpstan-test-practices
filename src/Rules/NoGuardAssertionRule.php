@@ -65,6 +65,8 @@ final readonly class NoGuardAssertionRule implements Rule
                 continue;
             }
 
+            $position = (int) array_search($stmt, $method->stmts ?? [], true);
+
             $errors[] = RuleErrorBuilder::message(sprintf(
                 'Test %s() calls %s() as a guard before the final assertion. Drop the guard and let the final assertion show the full diff.',
                 $method->name->toString(),
@@ -74,6 +76,7 @@ final readonly class NoGuardAssertionRule implements Rule
                 ->line($stmt->getStartLine())
                 ->tip('Read the value permissively ($result[0] ?? null, $object?->property) so the final assertion fails with a readable diff.')
                 ->metadata(Severity::metadata($this->severity))
+                ->fixNode($method, static fn (Stmt\ClassMethod $fixed): Stmt\ClassMethod => TestMethod::withoutStatement($fixed, $position))
                 ->build();
         }
 

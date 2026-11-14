@@ -133,6 +133,15 @@ final class TestMethod
         return $found;
     }
 
+    public static function withoutStatement(Stmt\ClassMethod $method, int $position): Stmt\ClassMethod
+    {
+        $stmts = $method->stmts ?? [];
+        unset($stmts[$position]);
+        $method->stmts = array_values($stmts);
+
+        return $method;
+    }
+
     public static function verifiedDouble(Expr\MethodCall $call): ?string
     {
         $owner = $call->var;
