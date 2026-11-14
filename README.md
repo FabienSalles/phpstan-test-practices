@@ -97,160 +97,18 @@ parameters:
 
 A test method is a public, non-static method of a `TestCase` subclass named `test*`, or carrying `#[Test]` or `@test`. Data providers (static) are never treated as tests. Assertions are `assert*` calls through `self::`, `static::`, `SomeClass::` or `$this->`, and Prophecy spy verifications (`shouldHaveBeenCalled()`, `shouldHaveBeenCalledTimes()`, `shouldHaveBeenCalledOnce()`, `shouldNotHaveBeenCalled()`, `shouldHave()`).
 
+Each rule has its own page: what it detects, a failing example with the real PHPStan output, a passing example, the reasoning behind it, its known limits.
+
 | Identifier | Default | Rationale |
 |---|---|---|
-| `testPractices.assertionsLast` | error | Arrange, act, assert: an assertion before the act, or hidden in an arrange callback, reads as a step of the scenario and fails with a confusing message |
-| `testPractices.noGuardAssertion` | error | A guard (`assertCount`, `assertInstanceOf`, `assertNotNull`, `assertIs*`...) stops the test before the real assertion shows its diff |
-| `testPractices.noComputedExpectedValue` | error | An expected value computed with the same logic as the code passes by construction |
-| `testPractices.noProductionConstantAsExpected` | error | Comparing a production constant with itself never fails when its value changes |
-| `testPractices.oneVerifiedDoublePerTest` | error | Several verified doubles mean several intentions in one test |
-| `testPractices.spyOverMock` | warning | A verification set before the act (mock) breaks arrange-act-assert; a spy verifies after the act |
-| `testPractices.preferInMemoryDouble` | warning | The same dependency doubled in several tests is a sign that a reusable in-memory implementation would be shorter and sturdier |
-| `testPractices.assertionCount` | 3: warning, 4+: error | One structured assertion reads better and fails with a complete diff; many assertions usually hide several intentions |
-
-### `testPractices.assertionsLast`
-
-Every top-level statement after the first assertion is reported, and so is any assertion inside a closure, arrow function or anonymous class of the arrange. An assertion inside `Argument::that()` within a spy verification is part of the final block and stays allowed.
-
-```php
-// ❌
-$mailer->method('send')->willReturnCallback(function (Email $email): void {
-    self::assertSame('alice@example.com', $email->getTo()[0]->getAddress());
-});
-$processor->process($order);
-
-// ✅
-$mailer = new SpyMailer();
-$processor = new OrderProcessor($mailer);
-
-$processor->process($order);
-
-self::assertSame('alice@example.com', $mailer->lastEmail()?->getTo()[0]?->getAddress());
-```
-
-### `testPractices.noGuardAssertion`
-
-```php
-// ❌
-self::assertCount(1, $result);
-self::assertInstanceOf(OrderSummary::class, $result[0]);
-self::assertSame(1, $result[0]->orderId);
-
-// ✅
-self::assertSame(1, ($result[0] ?? null)?->orderId);
-```
-
-### `testPractices.noComputedExpectedValue`
-
-Reports `assertSame`/`assertEquals` whose expected value (or the variable assigned to it) contains a `match`, a ternary or arithmetic (`+ - * / % **`).
-
-```php
-// ❌
-$expected = match (true) {
-    $order->total >= 100 => $order->total * 0.05,
-    default => 0.0,
-};
-self::assertSame($expected, $calculator->discount($order));
-
-// ✅ a literal per case, from a data provider
-self::assertSame($expectedDiscount, $calculator->discount($order));
-```
-
-### `testPractices.noProductionConstantAsExpected`
-
-Only the **expected** argument of an assertion is checked: the argument of an assertion method whose first parameter is named `$expected…` (`assertSame`, `assertEquals`, `assertNotSame`, `assertNotEquals`, `assertEqualsCanonicalizing`, `assertCount`, `assertJsonStringEqualsJsonString`...), passed positionally or as a named argument. A production constant anywhere else is fine: building a fixture or a stub (arrange), calling the code under test (act), in a data provider, or as the actual value. Enum cases, constants of the test class itself, built-in classes and `Foo::class` are not reported.
-
-```php
-// ❌
-self::assertSame(OrderController::STATUS_CONFIRMED, $payload['status']);
-
-// ✅
-self::assertSame('CONFIRMED', $payload['status']);
-
-// ✅ the constant drives the scenario, the expectation stays literal
-$order = new Order(OrderController::STATUS_CONFIRMED);
-$payload = $controller->show($order);
-self::assertSame('CONFIRMED', $payload['status']);
-```
-
-When the constant really is the contract under test, keep it and document the intent on the line:
-
-```php
-self::assertSame(Config::DEFAULT_LIMIT, $service->limit()); // @phpstan-ignore testPractices.noProductionConstantAsExpected
-```
-
-The default severity of this rule is `error`; whether it should be a warning is still an open decision, hence the `severity.noProductionConstantAsExpected` parameter.
-
-### `testPractices.oneVerifiedDoublePerTest`
-
-A verified double is one carrying `expects()` (PHPUnit), a Prophecy expectation (`shouldBeCalled*()`, `shouldNotBeCalled()`, `should()`) or a Prophecy spy verification. Stubs do not count.
-
-```php
-// ❌
-$logger->info(Argument::any())->shouldBeCalled();
-$processor->process($order);
-$mailer->send(Argument::any())->shouldHaveBeenCalled();
-
-// ✅ one test per intention
-$processor->process($order);
-
-$mailer->send(Argument::any())->shouldHaveBeenCalled();
-```
-
-### `testPractices.spyOverMock`
-
-```php
-// ❌
-$logger->expects(self::once())->method('info')->with('Order processed');
-$processor->process($order);
-
-// ✅
-$logger = $this->prophesize(LoggerInterface::class);
-$processor = new OrderProcessor($logger->reveal());
-
-$processor->process($order);
-
-$logger->info('Order processed')->shouldHaveBeenCalled();
-```
-
-### `testPractices.preferInMemoryDouble`
-
-Counts `createMock`, `createStub`, `createConfiguredMock`, `createConfiguredStub`, `createPartialMock`, `getMockBuilder`, `getMockForAbstractClass` and `prophesize` calls on `X::class`, per test method, across the hierarchy of each concrete test class:
-
-- The test methods of a concrete class are its own, those of the traits it uses and those it inherits from its parent classes (an abstract base `TestCase`, for instance), unless it overrides them. Abstract classes are not reported themselves; their test methods count in each concrete subclass.
-- A test method doubles `X` when its body creates the double, or when it calls (`$this->`, `self::`, `static::`) a helper that creates it, directly or through other helpers. The helper may be declared in the class, in a parent class or in a trait.
-- A helper used by N test methods counts N times: a parent helper creating a stub, called by two tests of a concrete class, reports that class at the default threshold of 2. An inherited test method counts once in every concrete subclass that inherits it.
-- `setUp()` and the other hooks are not called by the test methods, so the doubles they create are not counted.
-- Parent classes and traits are read from the analysed paths only: a base class outside them (in `vendor/`, for instance) contributes nothing.
-
-Reported once per dependency and concrete test class, in that class's file: on the first creation in that file, or on the class declaration when every creation lives in a parent class or a trait.
-
-```php
-// ❌ in three test methods of the same class
-$repository = $this->createStub(OrderRepository::class);
-$repository->method('find')->willReturn($order);
-
-// ✅ one hand-written double, reused
-$repository = new InMemoryOrderRepository([$order]);
-```
-
-### `testPractices.assertionCount`
-
-Counts the assertions of each test method, anywhere in its body. An assertion nested in another one (`Argument::that()` inside a spy verification) is not counted again. 1 is preferred, 2 is allowed, 3 is a warning, 4 or more an error.
-
-```php
-// ❌ 4 assertions: error
-self::assertSame(42, $order->id);
-self::assertSame('alice', $order->customer);
-self::assertSame(250.0, $order->total);
-self::assertSame('CONFIRMED', $order->status);
-
-// ✅ 1 structured assertion
-self::assertSame(
-    ['id' => 42, 'customer' => 'alice', 'total' => 250.0, 'status' => 'CONFIRMED'],
-    ['id' => $order->id, 'customer' => $order->customer, 'total' => $order->total, 'status' => $order->status],
-);
-```
+| [`testPractices.assertionsLast`](docs/rules/assertionsLast.md) | error | Arrange, act, assert: an assertion before the act, or hidden in an arrange callback, reads as a step of the scenario and fails with a confusing message |
+| [`testPractices.noComputedExpectedValue`](docs/rules/noComputedExpectedValue.md) | error | An expected value computed with the same logic as the code passes by construction |
+| [`testPractices.noGuardAssertion`](docs/rules/noGuardAssertion.md) | error | A guard (`assertCount`, `assertInstanceOf`, `assertNotNull`, `assertIs*`...) stops the test before the real assertion shows its diff |
+| [`testPractices.noProductionConstantAsExpected`](docs/rules/noProductionConstantAsExpected.md) | error | Comparing a production constant with itself never fails when its value changes |
+| [`testPractices.oneVerifiedDoublePerTest`](docs/rules/oneVerifiedDoublePerTest.md) | error | Several verified doubles mean several intentions in one test |
+| [`testPractices.assertionCount`](docs/rules/assertionCount.md) | 3: warning, 4+: error | One structured assertion reads better and fails with a complete diff; many assertions usually hide several intentions |
+| [`testPractices.spyOverMock`](docs/rules/spyOverMock.md) | warning | A verification set before the act (mock) breaks arrange-act-assert; a spy verifies after the act |
+| [`testPractices.preferInMemoryDouble`](docs/rules/preferInMemoryDouble.md) | warning | The same dependency doubled in several tests is a sign that a reusable in-memory implementation would be shorter and sturdier |
 
 ## Ignoring a finding
 
