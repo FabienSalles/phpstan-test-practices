@@ -213,7 +213,15 @@ $logger->info('Order processed')->shouldHaveBeenCalled();
 
 ### `testPractices.preferInMemoryDouble`
 
-Counts `createMock`, `createStub`, `createConfiguredMock`, `createConfiguredStub`, `createPartialMock`, `getMockBuilder`, `getMockForAbstractClass` and `prophesize` calls on `X::class`, per test method. Doubles created in `setUp()` or helper methods are not counted. Reported once per dependency, on its first creation.
+Counts `createMock`, `createStub`, `createConfiguredMock`, `createConfiguredStub`, `createPartialMock`, `getMockBuilder`, `getMockForAbstractClass` and `prophesize` calls on `X::class`, per test method, across the hierarchy of each concrete test class:
+
+- The test methods of a concrete class are its own, those of the traits it uses and those it inherits from its parent classes (an abstract base `TestCase`, for instance), unless it overrides them. Abstract classes are not reported themselves; their test methods count in each concrete subclass.
+- A test method doubles `X` when its body creates the double, or when it calls (`$this->`, `self::`, `static::`) a helper that creates it, directly or through other helpers. The helper may be declared in the class, in a parent class or in a trait.
+- A helper used by N test methods counts N times: a parent helper creating a stub, called by two tests of a concrete class, reports that class at the default threshold of 2. An inherited test method counts once in every concrete subclass that inherits it.
+- `setUp()` and the other hooks are not called by the test methods, so the doubles they create are not counted.
+- Parent classes and traits are read from the analysed paths only: a base class outside them (in `vendor/`, for instance) contributes nothing.
+
+Reported once per dependency and concrete test class, in that class's file: on the first creation in that file, or on the class declaration when every creation lives in a parent class or a trait.
 
 ```php
 // ❌ in three test methods of the same class

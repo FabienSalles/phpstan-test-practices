@@ -4,32 +4,22 @@ declare(strict_types=1);
 
 namespace FabienSalles\PHPStanTestPractices\Rules;
 
+use FabienSalles\PHPStanTestPractices\Collectors\TestCaseCollector;
+use FabienSalles\PHPStanTestPractices\Collectors\TestDoubleCollector;
 use FabienSalles\PHPStanTestPractices\Severity\Severity;
-use FabienSalles\PHPStanTestPractices\TestMethod;
 use PhpParser\Node;
-use PhpParser\Node\Expr;
-use PhpParser\Node\Stmt;
 use PHPStan\Analyser\Scope;
-use PHPStan\Node\InClassNode;
+use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
 /**
- * @implements Rule<InClassNode>
+ * @phpstan-type TestDouble array{dependency: string, file: string, line: int}
+ * @phpstan-type Method array{class: string, method: string, test: bool, fromTrait: bool, doubles: list<TestDouble>, calls: list<string>}
+ * @implements Rule<CollectedDataNode>
  */
 final readonly class PreferInMemoryDoubleRule implements Rule
 {
-    private const FACTORIES = [
-        'createconfiguredmock',
-        'createconfiguredstub',
-        'createmock',
-        'createpartialmock',
-        'createstub',
-        'getmockbuilder',
-        'getmockforabstractclass',
-        'prophesize',
-    ];
-
     public function __construct(
         private int $threshold,
         private string $severity,
@@ -38,81 +28,81 @@ final readonly class PreferInMemoryDoubleRule implements Rule
 
     public function getNodeType(): string
     {
-        return InClassNode::class;
+        return CollectedDataNode::class;
     }
 
     public function processNode(Node $node, Scope $scope): array
     {
-        $class = $node->getClassReflection();
-        if (!TestMethod::isTestCase($class)) {
-            return [];
-        }
-
-        $usages = [];
-        foreach ($node->getOriginalNode()->getMethods() as $method) {
-            if (!TestMethod::isTest($method, $class)) {
-                continue;
-            }
-
-            foreach (TestMethod::find($method->stmts ?? [], self::isDoubleFactory(...)) as $call) {
-                $dependency = self::doubledClass($call, $class->getName());
-                if ($dependency === null) {
-                    continue;
+        $declared = [];
+        foreach ($node->get(TestDoubleCollector::class) as $methods) {
+            foreach ($methods as $method) {
+                $existing = $declared[$method['class']][strtolower($method['method'])] ?? null;
+                if ($existing === null || ($existing['fromTrait'] && !$method['fromTrait'])) {
+                    $declared[$method['class']][strtolower($method['method'])] = $method;
                 }
-
-                $usages[$dependency][$method->name->toString()] ??= $call->getStartLine();
             }
         }
 
         $errors = [];
-        foreach ($usages as $dependency => $methods) {
-            if (count($methods) < $this->threshold) {
-                continue;
-            }
+        foreach ($node->get(TestCaseCollector::class) as $file => $testCases) {
+            foreach ($testCases as $testCase) {
+                $methods = [];
+                foreach ($testCase['lineage'] as $class) {
+                    $methods += $declared[$class] ?? [];
+                }
 
-            $errors[] = RuleErrorBuilder::message(sprintf(
-                '%s is doubled in %d test methods (%s). Prefer a hand-written in-memory stub or fake, reused across the tests.',
-                $dependency,
-                count($methods),
-                implode('(), ', array_keys($methods)) . '()',
-            ))
-                ->identifier('testPractices.preferInMemoryDouble')
-                ->line(min($methods))
-                ->tip('An in-memory implementation of the interface keeps each test short and survives changes to how the dependency is called.')
-                ->metadata(Severity::metadata($this->severity))
-                ->build();
+                $usages = [];
+                foreach ($methods as $method) {
+                    if (!$method['test']) {
+                        continue;
+                    }
+
+                    foreach (self::doublesReachedFrom($method, $methods) as $double) {
+                        $usages[$double['dependency']][$method['method']] ??= $double;
+                    }
+                }
+
+                foreach ($usages as $dependency => $doubles) {
+                    if (count($doubles) < $this->threshold) {
+                        continue;
+                    }
+
+                    $linesInFile = array_map(static fn (array $double): int => $double['line'], array_filter($doubles, static fn (array $double): bool => $double['file'] === $file));
+                    $errors[] = RuleErrorBuilder::message(sprintf(
+                        '%s is doubled in %d test methods (%s). Prefer a hand-written in-memory stub or fake, reused across the tests.',
+                        $dependency,
+                        count($doubles),
+                        implode('(), ', array_keys($doubles)) . '()',
+                    ))
+                        ->identifier('testPractices.preferInMemoryDouble')
+                        ->file($file)
+                        ->line($linesInFile === [] ? $testCase['line'] : min($linesInFile))
+                        ->tip('An in-memory implementation of the interface keeps each test short and survives changes to how the dependency is called.')
+                        ->metadata(Severity::metadata($this->severity))
+                        ->build();
+                }
+            }
         }
 
         return $errors;
     }
 
-    private static function isDoubleFactory(Node $node): bool
+    /**
+     * @param Method $method
+     * @param array<string, Method> $methods
+     * @param array<string, true> $visited
+     * @return list<TestDouble>
+     */
+    private static function doublesReachedFrom(array $method, array $methods, array &$visited = []): array
     {
-        if (!in_array(strtolower(TestMethod::callName($node) ?? ''), self::FACTORIES, true)) {
-            return false;
+        $visited[strtolower($method['method'])] = true;
+        $doubles = $method['doubles'];
+        foreach ($method['calls'] as $call) {
+            if (isset($methods[$call]) && !isset($visited[$call])) {
+                $doubles = [...$doubles, ...self::doublesReachedFrom($methods[$call], $methods, $visited)];
+            }
         }
 
-        return $node instanceof Expr\StaticCall
-            || ($node instanceof Expr\MethodCall && $node->var instanceof Expr\Variable && $node->var->name === 'this');
-    }
-
-    private static function doubledClass(Node $call, string $testClass): ?string
-    {
-        if (!$call instanceof Expr\CallLike || $call->isFirstClassCallable()) {
-            return null;
-        }
-
-        $argument = $call->getArgs()[0]->value ?? null;
-        if (!$argument instanceof Expr\ClassConstFetch || !$argument->class instanceof Node\Name || !$argument->name instanceof Node\Identifier) {
-            return null;
-        }
-
-        if ($argument->name->toLowerString() !== 'class') {
-            return null;
-        }
-
-        $name = $argument->class->toString();
-
-        return in_array(strtolower($name), ['self', 'static'], true) ? $testClass : ltrim($name, '\\');
+        return $doubles;
     }
 }

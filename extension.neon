@@ -86,6 +86,16 @@ services:
             - phpstan.rules.rule
 
     -
+        class: FabienSalles\PHPStanTestPractices\Collectors\TestCaseCollector
+        tags:
+            - phpstan.collector
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Collectors\TestDoubleCollector
+        tags:
+            - phpstan.collector
+
+    -
         class: FabienSalles\PHPStanTestPractices\Rules\PreferInMemoryDoubleRule
         arguments:
             threshold: %testPractices.preferInMemoryDouble.threshold%

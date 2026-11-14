@@ -48,7 +48,10 @@ final class CorpusTest extends TestCase
             'corpus' => 'solution',
             'expectedFindings' => [
                 'Calculator/OrderDiscountCalculatorTest.php:30 testPractices.noComputedExpectedValue',
+                'Processor/OrderProcessorTest.php:21 testPractices.preferInMemoryDouble',
                 'Processor/OrderProcessorTest.php:22 testPractices.spyOverMock',
+                'Processor/OrderProcessorTest.php:89 testPractices.preferInMemoryDouble',
+                'Processor/OrderProcessorTest.php:90 testPractices.preferInMemoryDouble',
             ],
         ];
 
