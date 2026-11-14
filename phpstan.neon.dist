@@ -2,24 +2,3 @@ parameters:
     level: max
     paths:
         - src
-    ignoreErrors:
-        -
-            identifier: function.alreadyNarrowedType
-            path: src/Severity/SeverityErrorFormatter.php
-            count: 1
-            reportUnmatched: false
-        -
-            identifier: function.impossibleType
-            path: src/Severity/SeverityErrorFormatter.php
-            count: 1
-            reportUnmatched: false
-        -
-            identifier: return.type
-            path: src/Severity/SeverityErrorFormatter.php
-            count: 1
-            reportUnmatched: false
-        -
-            identifier: argument.type
-            path: src/Severity/SeverityErrorFormatter.php
-            count: 2
-            reportUnmatched: false

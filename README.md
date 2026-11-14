@@ -155,7 +155,7 @@ parameters:
         diffBase: origin/main
 ```
 
-The error formatter runs `git diff --unified=0 <diffBase>` in the working directory and keeps the findings whose line is in a changed hunk (added or modified lines, staged or not; untracked files are not in the diff until `git add -N`). The filter applies to every PHPStan error printed by the formatter, not only to this extension's. The analysis itself is unchanged: PHPStan still analyses all the configured paths, so the result cache stays valid and `preferInMemoryDouble` still sees the whole hierarchy. A `preferInMemoryDouble` finding is kept as soon as its file changed, since its line points to the first creation of the dependency, not to the test that was added. This needs PHPStan 2.1.41 or later (`AnalysisResult::withFileSpecificErrors()`); older versions report a configuration error.
+The error formatter runs `git diff --unified=0 <diffBase>` in the working directory and keeps the findings whose line is in a changed hunk (added or modified lines, staged or not; untracked files are not in the diff until `git add -N`). The filter applies to every PHPStan error printed by the formatter, not only to this extension's. The analysis itself is unchanged: PHPStan still analyses all the configured paths, so the result cache stays valid and `preferInMemoryDouble` still sees the whole hierarchy. A `preferInMemoryDouble` finding is kept as soon as its file changed, since its line points to the first creation of the dependency, not to the test that was added.
 
 Limiting the analysed files instead is possible with plain PHPStan, at a cost:
 
@@ -190,7 +190,7 @@ Tested in this repository's CI matrix and locally with Docker:
 | | Lowest tested | Highest tested |
 |---|---|---|
 | PHP | 8.2 | 8.4 |
-| PHPStan | 2.1.0 | 2.3.5 |
+| PHPStan | 2.1.41 | 2.3.5 |
 | PHPUnit 11 (fixtures and test suite) | 11.5.50 | 11.5.58 |
 | PHPUnit 12 (fixtures and test suite, PHP 8.3+) | 12.5.8 | 12.5.44 |
 | Prophecy (`phpspec/prophecy`) | 1.19.0 | 1.26.1 |

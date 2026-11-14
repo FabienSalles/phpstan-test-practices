@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FabienSalles\PHPStanTestPractices\Tests\Adoption;
 
-use PHPStan\Command\AnalysisResult;
-use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 
 final class AdoptionTest extends TestCase
@@ -87,7 +85,6 @@ final class AdoptionTest extends TestCase
         );
     }
 
-    #[RequiresMethod(AnalysisResult::class, 'withFileSpecificErrors')]
     public function testDiffBaseReportsOnlyTheFindingsOnChangedLines(): void
     {
         $test = $this->workspace . '/GuardAssertionTest.php';

@@ -56,12 +56,6 @@ final readonly class SeverityErrorFormatter implements ErrorFormatter
 
     private function onChangedLines(string $diffBase, AnalysisResult $analysisResult, Output $output): ?AnalysisResult
     {
-        if (!method_exists($analysisResult, 'withFileSpecificErrors')) {
-            $output->writeLineFormatted('testPractices.diffBase requires PHPStan 2.1.41 or later.');
-
-            return null;
-        }
-
         try {
             $changedLines = ChangedLines::since($diffBase, $this->workingDirectory);
         } catch (RuntimeException $exception) {

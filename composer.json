@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1.41"
     },
     "require-dev": {
         "phpspec/prophecy-phpunit": "^2.3",
