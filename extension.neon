@@ -15,6 +15,10 @@ parameters:
             testMethodIsDiscoverable: error
             testClassSuffix: error
             testFileInTestsuite: error
+            noTryCatchInTest: error
+            noControlFlowInTest: error
+            expectExceptionBeforeAct: error
+            noDependsBetweenTests: error
         phpunitConfiguration: null
         testClassSuffix:
             suffix: Test
@@ -40,6 +44,10 @@ parametersSchema:
             testMethodIsDiscoverable: anyOf('error', 'warning'),
             testClassSuffix: anyOf('error', 'warning'),
             testFileInTestsuite: anyOf('error', 'warning'),
+            noTryCatchInTest: anyOf('error', 'warning'),
+            noControlFlowInTest: anyOf('error', 'warning'),
+            expectExceptionBeforeAct: anyOf('error', 'warning'),
+            noDependsBetweenTests: anyOf('error', 'warning'),
         }),
         phpunitConfiguration: schema(string(), nullable()),
         testClassSuffix: structure({
@@ -161,6 +169,38 @@ services:
             configuration: %testPractices.phpunitConfiguration%
             workingDirectory: %currentWorkingDirectory%
             severity: %testPractices.severity.testFileInTestsuite%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoTryCatchInTestRule
+        arguments:
+            severity: %testPractices.severity.noTryCatchInTest%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoControlFlowInTestRule
+        arguments:
+            severity: %testPractices.severity.noControlFlowInTest%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\ExpectExceptionBeforeActRule
+        arguments:
+            severity: %testPractices.severity.expectExceptionBeforeAct%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoDependsBetweenTestsRule
+        arguments:
+            severity: %testPractices.severity.noDependsBetweenTests%
             level: %testPractices.level%
         tags:
             - phpstan.rules.rule
