@@ -35,6 +35,7 @@
             "FabienSalles\\PHPStanTestPractices\\Tests\\": "tests/"
         },
         "classmap": [
+            "tests/Fixtures/Fix/",
             "tests/Fixtures/Rules/"
         ]
     },

@@ -30,4 +30,9 @@ final class NoProductionConstantAsExpectedRuleTest extends RuleTestCase
             [sprintf(self::MESSAGE, 'STATUS_CONFIRMED'), 72, self::TIP],
         ]);
     }
+
+    public function testReplacesAScalarConstantByItsLiteralValue(): void
+    {
+        $this->fix(__DIR__ . '/../Fixtures/Fix/NoProductionConstantAsExpected.php', __DIR__ . '/../Fixtures/Fix/NoProductionConstantAsExpected.php.fixed');
+    }
 }
