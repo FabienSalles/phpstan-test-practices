@@ -1,0 +1,65 @@
+{
+    "name": "fabiensalles/phpstan-test-practices",
+    "description": "PHPStan rules that check the shape of PHPUnit tests: assertions last, no guard assertions, literal expected values, one verified double, spies over mocks.",
+    "license": "MIT",
+    "type": "phpstan-extension",
+    "keywords": [
+        "phpstan",
+        "phpstan-extension",
+        "phpunit",
+        "prophecy",
+        "testing",
+        "static analysis"
+    ],
+    "authors": [
+        {
+            "name": "Fabien Salles",
+            "email": "contact@fabiensalles.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "phpstan/phpstan": "^2.1"
+    },
+    "require-dev": {
+        "phpspec/prophecy-phpunit": "^2.3",
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "FabienSalles\\PHPStanTestPractices\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FabienSalles\\PHPStanTestPractices\\Tests\\": "tests/"
+        },
+        "classmap": [
+            "tests/Fixtures/Rules/"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    },
+    "scripts": {
+        "analyse": "phpstan analyse --no-progress",
+        "ci": [
+            "@composer validate --strict",
+            "@test",
+            "@analyse"
+        ],
+        "test": "phpunit"
+    },
+    "scripts-descriptions": {
+        "analyse": "Analyse src/ with PHPStan at level max",
+        "ci": "Run every check the CI runs",
+        "test": "Run the PHPUnit suite"
+    }
+}
