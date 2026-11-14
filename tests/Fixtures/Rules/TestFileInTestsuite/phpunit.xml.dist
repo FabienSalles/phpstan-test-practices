@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests/Unit</directory>
+            <exclude>tests/Unit/ExcludedTest.php</exclude>
+        </testsuite>
+        <testsuite name="misc">
+            <file>tests/Misc/ListedChecks.php</file>
+            <directory suffix="Spec.php">tests/Misc</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

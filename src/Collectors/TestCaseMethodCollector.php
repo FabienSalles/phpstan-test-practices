@@ -75,7 +75,7 @@ final readonly class TestCaseMethodCollector implements Collector
     /**
      * @return list<string>
      */
-    private static function callableReferences(Node $method): array
+    private static function callableReferences(Node\Stmt\ClassMethod $method): array
     {
         $references = [];
         foreach (TestMethod::find($method, static fn (Node $node): bool => $node instanceof Expr\Array_ && count($node->items) === 2) as $array) {
@@ -88,6 +88,20 @@ final readonly class TestCaseMethodCollector implements Collector
             if ($target instanceof Expr\Variable && $target->name === 'this' && $name instanceof Node\Scalar\String_) {
                 $references[] = strtolower($name->value);
             }
+        }
+
+        foreach ($method->attrGroups as $group) {
+            foreach ($group->attrs as $attribute) {
+                $provider = $attribute->args[0]->value ?? null;
+                if ($attribute->name->toString() === 'PHPUnit\Framework\Attributes\DataProvider' && $provider instanceof Node\Scalar\String_) {
+                    $references[] = strtolower($provider->value);
+                }
+            }
+        }
+
+        $doc = $method->getDocComment()?->getText() ?? '';
+        if (preg_match_all('/@dataProvider\s+(\w+)/', $doc, $matches) > 0) {
+            $references = [...$references, ...array_map(strtolower(...), $matches[1])];
         }
 
         return $references;

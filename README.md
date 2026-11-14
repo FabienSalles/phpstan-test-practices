@@ -80,6 +80,12 @@ parameters:
             oneVerifiedDoublePerTest: error
             spyOverMock: warning
             preferInMemoryDouble: warning
+            testMethodIsDiscoverable: error
+            testClassSuffix: error
+            testFileInTestsuite: error
+        phpunitConfiguration: null
+        testClassSuffix:
+            suffix: Test
         preferInMemoryDouble:
             threshold: 2
         assertionCount:
@@ -93,6 +99,8 @@ parameters:
 | `errorFormat` | any PHPStan formatter name | Formatter that prints the findings |
 | `diffBase` | `null`, any git revision | Report only the findings on lines changed since this revision, see [diff mode](#diff-mode) |
 | `severity.<rule>` | `error`, `warning` | Severity of each rule |
+| `phpunitConfiguration` | `null`, a path | PHPUnit configuration read by `testFileInTestsuite`; `null` looks for `phpunit.xml`, `phpunit.dist.xml`, `phpunit.xml.dist` in the working directory |
+| `testClassSuffix.suffix` | string | Suffix every concrete test class must end with |
 | `preferInMemoryDouble.threshold` | int ≥ 1 | Number of test methods doubling the same class before it is reported |
 | `assertionCount.warningFrom` | int ≥ 1 | Assertions per test from which a warning is reported |
 | `assertionCount.errorFrom` | int ≥ 1 | Assertions per test from which an error is reported |
@@ -105,6 +113,9 @@ Each rule has its own page: what it detects, a failing example with the real PHP
 
 | Identifier | Level | Default | Rationale |
 |---|---|---|---|
+| [`testPractices.testFileInTestsuite`](docs/rules/testFileInTestsuite.md) | 0 | error | A test file no `<testsuite>` collects never runs |
+| [`testPractices.testClassSuffix`](docs/rules/testClassSuffix.md) | 0 | error | PHPUnit collects `*Test.php` files: a test class without the suffix never runs |
+| [`testPractices.testMethodIsDiscoverable`](docs/rules/testMethodIsDiscoverable.md) | 0 | error | A method with assertions that is neither a test nor called by one never runs |
 | [`testPractices.assertionsLast`](docs/rules/assertionsLast.md) | 0 | error | Arrange, act, assert: an assertion before the act, or hidden in an arrange callback, reads as a step of the scenario and fails with a confusing message |
 | [`testPractices.noComputedExpectedValue`](docs/rules/noComputedExpectedValue.md) | 0 | error | An expected value computed with the same logic as the code passes by construction |
 | [`testPractices.noGuardAssertion`](docs/rules/noGuardAssertion.md) | 1 | error | A guard (`assertCount`, `assertInstanceOf`, `assertNotNull`, `assertIs*`...) stops the test before the real assertion shows its diff |
@@ -122,7 +133,7 @@ Three rules can fix what they report: `noProductionConstantAsExpected` (the cons
 
 | Level | Adds | Why at this level |
 |---|---|---|
-| 0 | `assertionsLast`, `noComputedExpectedValue` | A computed expectation passes by construction; an assertion in the arrange may never run. Both make a test lie, with almost no false positive |
+| 0 | `testFileInTestsuite`, `testClassSuffix`, `testMethodIsDiscoverable`, `assertionsLast`, `noComputedExpectedValue` | A test that never runs, a computed expectation that passes by construction, an assertion in the arrange that may never run: each makes a test lie, with almost no false positive |
 | 1 | `noGuardAssertion`, `noProductionConstantAsExpected` | Tautologies and hidden diffs, with a few legitimate exceptions (a constant that is the contract, two real expectations) |
 | 2 | `oneVerifiedDoublePerTest`, `assertionCount` | Heuristics about intentions per test: valuable, but thresholds and interaction-heavy tests make exceptions more common |
 | 3 (`max`, default) | `spyOverMock`, `preferInMemoryDouble` | Design preferences, warnings by default |

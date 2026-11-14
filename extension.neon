@@ -12,6 +12,12 @@ parameters:
             oneVerifiedDoublePerTest: error
             spyOverMock: warning
             preferInMemoryDouble: warning
+            testMethodIsDiscoverable: error
+            testClassSuffix: error
+            testFileInTestsuite: error
+        phpunitConfiguration: null
+        testClassSuffix:
+            suffix: Test
         preferInMemoryDouble:
             threshold: 2
         assertionCount:
@@ -31,6 +37,13 @@ parametersSchema:
             oneVerifiedDoublePerTest: anyOf('error', 'warning'),
             spyOverMock: anyOf('error', 'warning'),
             preferInMemoryDouble: anyOf('error', 'warning'),
+            testMethodIsDiscoverable: anyOf('error', 'warning'),
+            testClassSuffix: anyOf('error', 'warning'),
+            testFileInTestsuite: anyOf('error', 'warning'),
+        }),
+        phpunitConfiguration: schema(string(), nullable()),
+        testClassSuffix: structure({
+            suffix: string(),
         }),
         preferInMemoryDouble: structure({
             threshold: schema(int(), min(1)),
@@ -121,6 +134,33 @@ services:
         arguments:
             warningFrom: %testPractices.assertionCount.warningFrom%
             errorFrom: %testPractices.assertionCount.errorFrom%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\TestMethodIsDiscoverableRule
+        arguments:
+            severity: %testPractices.severity.testMethodIsDiscoverable%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\TestClassSuffixRule
+        arguments:
+            suffix: %testPractices.testClassSuffix.suffix%
+            severity: %testPractices.severity.testClassSuffix%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\TestFileInTestsuiteRule
+        arguments:
+            configuration: %testPractices.phpunitConfiguration%
+            workingDirectory: %currentWorkingDirectory%
+            severity: %testPractices.severity.testFileInTestsuite%
             level: %testPractices.level%
         tags:
             - phpstan.rules.rule

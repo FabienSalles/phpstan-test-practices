@@ -42,7 +42,7 @@ final class RuleDocumentationTest extends TestCase
      */
     public static function provideRules(): iterable
     {
-        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount'] as $rule) {
+        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount', 'testFileInTestsuite', 'testClassSuffix', 'testMethodIsDiscoverable'] as $rule) {
             yield $rule => [$rule];
         }
     }
@@ -53,10 +53,11 @@ final class RuleDocumentationTest extends TestCase
     private static function analyse(string $path): array
     {
         $command = sprintf(
-            'cd %s && %s vendor/bin/phpstan analyse --no-progress --no-interaction --memory-limit=512M --error-format=json -c tests/Fixtures/Docs/phpstan.neon %s 2>/dev/null',
-            escapeshellarg(self::ROOT),
+            'cd %s && %s %s analyse --no-progress --no-interaction --memory-limit=512M --error-format=json -c phpstan.neon %s 2>/dev/null',
+            escapeshellarg(self::ROOT . '/tests/Fixtures/Docs'),
             escapeshellarg(PHP_BINARY),
-            escapeshellarg($path),
+            escapeshellarg(self::ROOT . '/vendor/bin/phpstan'),
+            escapeshellarg(self::ROOT . '/' . $path),
         );
         exec($command, $output);
         $root = (string) realpath(self::ROOT) . '/';
