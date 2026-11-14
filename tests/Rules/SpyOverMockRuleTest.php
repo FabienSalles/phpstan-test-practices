@@ -29,4 +29,9 @@ final class SpyOverMockRuleTest extends RuleTestCase
             ['Test testOnePhpUnitMockOnAProperty() calls expects(), which sets a verification before the act (mock). Prefer a spy verified after the act.', 77, self::TIP],
         ]);
     }
+
+    public function testMovesAProphecyExpectationAfterTheAct(): void
+    {
+        $this->fix(__DIR__ . '/../Fixtures/Fix/SpyOverMock.php', __DIR__ . '/../Fixtures/Fix/SpyOverMock.php.fixed');
+    }
 }
