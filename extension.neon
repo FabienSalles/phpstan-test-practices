@@ -1,0 +1,64 @@
+parameters:
+    testPractices:
+        severity:
+            assertionsLast: error
+            noGuardAssertion: error
+            noComputedExpectedValue: error
+            noProductionConstantAsExpected: error
+            oneVerifiedDoublePerTest: error
+            spyOverMock: warning
+
+parametersSchema:
+    testPractices: structure({
+        severity: structure({
+            assertionsLast: anyOf('error', 'warning'),
+            noGuardAssertion: anyOf('error', 'warning'),
+            noComputedExpectedValue: anyOf('error', 'warning'),
+            noProductionConstantAsExpected: anyOf('error', 'warning'),
+            oneVerifiedDoublePerTest: anyOf('error', 'warning'),
+            spyOverMock: anyOf('error', 'warning'),
+        }),
+    })
+
+services:
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\AssertionsLastRule
+        arguments:
+            severity: %testPractices.severity.assertionsLast%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoGuardAssertionRule
+        arguments:
+            severity: %testPractices.severity.noGuardAssertion%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoComputedExpectedValueRule
+        arguments:
+            severity: %testPractices.severity.noComputedExpectedValue%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoProductionConstantAsExpectedRule
+        arguments:
+            severity: %testPractices.severity.noProductionConstantAsExpected%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\OneVerifiedDoublePerTestRule
+        arguments:
+            severity: %testPractices.severity.oneVerifiedDoublePerTest%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\SpyOverMockRule
+        arguments:
+            severity: %testPractices.severity.spyOverMock%
+        tags:
+            - phpstan.rules.rule
