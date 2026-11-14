@@ -12,7 +12,8 @@ use PHPStan\Node\InClassNode;
 use PHPStan\Reflection\ClassReflection;
 
 /**
- * @implements Collector<InClassNode, array{class: string, lineage: list<string>, line: int}>
+ * @phpstan-type TestCase array{class: string, lineage: list<string>, line: int}
+ * @implements Collector<InClassNode, TestCase>
  */
 final readonly class TestCaseCollector implements Collector
 {

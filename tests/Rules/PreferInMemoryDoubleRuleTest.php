@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FabienSalles\PHPStanTestPractices\Tests\Rules;
 
 use FabienSalles\PHPStanTestPractices\Collectors\TestCaseCollector;
-use FabienSalles\PHPStanTestPractices\Collectors\TestDoubleCollector;
+use FabienSalles\PHPStanTestPractices\Collectors\TestCaseMethodCollector;
 use FabienSalles\PHPStanTestPractices\Rules\PreferInMemoryDoubleRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
@@ -27,7 +27,7 @@ final class PreferInMemoryDoubleRuleTest extends RuleTestCase
 
     protected function getCollectors(): array
     {
-        return [new TestCaseCollector(), new TestDoubleCollector()];
+        return [new TestCaseCollector(), new TestCaseMethodCollector()];
     }
 
     public function testFlagsADependencyDoubledInSeveralTestMethods(): void

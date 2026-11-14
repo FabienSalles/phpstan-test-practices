@@ -103,7 +103,7 @@ services:
             - phpstan.collector
 
     -
-        class: FabienSalles\PHPStanTestPractices\Collectors\TestDoubleCollector
+        class: FabienSalles\PHPStanTestPractices\Collectors\TestCaseMethodCollector
         tags:
             - phpstan.collector
 

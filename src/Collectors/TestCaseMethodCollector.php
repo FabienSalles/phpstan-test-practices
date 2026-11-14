@@ -13,9 +13,10 @@ use PHPStan\Node\InClassMethodNode;
 
 /**
  * @phpstan-type TestDouble array{dependency: string, file: string, line: int}
- * @implements Collector<InClassMethodNode, array{class: string, method: string, test: bool, fromTrait: bool, doubles: list<TestDouble>, calls: list<string>}>
+ * @phpstan-type Method array{class: string, method: string, test: bool, root: bool, public: bool, asserts: bool, fromTrait: bool, file: string, line: int, doubles: list<TestDouble>, calls: list<string>}
+ * @implements Collector<InClassMethodNode, Method>
  */
-final readonly class TestDoubleCollector implements Collector
+final readonly class TestCaseMethodCollector implements Collector
 {
     private const FACTORIES = [
         'createconfiguredmock',
@@ -54,13 +55,42 @@ final readonly class TestDoubleCollector implements Collector
             'class' => $class->getName(),
             'method' => $method->name->toString(),
             'test' => TestMethod::isTest($method, $class),
+            'root' => TestMethod::isHook($method),
+            'public' => $method->isPublic() && !$method->isStatic(),
+            'asserts' => TestMethod::find($method->stmts ?? [], TestMethod::isAssertion(...)) !== [],
             'fromTrait' => $scope->isInTrait(),
+            'file' => $file,
+            'line' => $method->getStartLine(),
             'doubles' => $doubles,
-            'calls' => array_values(array_unique(array_map(
-                static fn (Node $call): string => strtolower((string) TestMethod::callName($call)),
-                TestMethod::find($method->stmts ?? [], self::isOwnMethodCall(...)),
-            ))),
+            'calls' => array_values(array_unique([
+                ...array_map(
+                    static fn (Node $call): string => strtolower((string) TestMethod::callName($call)),
+                    TestMethod::find($method->stmts ?? [], self::isOwnMethodCall(...)),
+                ),
+                ...self::callableReferences($method),
+            ])),
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function callableReferences(Node $method): array
+    {
+        $references = [];
+        foreach (TestMethod::find($method, static fn (Node $node): bool => $node instanceof Expr\Array_ && count($node->items) === 2) as $array) {
+            if (!$array instanceof Expr\Array_) {
+                continue;
+            }
+
+            $target = $array->items[0]->value ?? null;
+            $name = $array->items[1]->value ?? null;
+            if ($target instanceof Expr\Variable && $target->name === 'this' && $name instanceof Node\Scalar\String_) {
+                $references[] = strtolower($name->value);
+            }
+        }
+
+        return $references;
     }
 
     private static function isOwnMethodCall(Node $node): bool

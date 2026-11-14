@@ -14,6 +14,15 @@ final class TestMethod
 {
     private const TEST_CASE = 'PHPUnit\Framework\TestCase';
     private const TEST_ATTRIBUTE = 'PHPUnit\Framework\Attributes\Test';
+    private const HOOKS = ['setup', 'teardown', 'setupbeforeclass', 'teardownafterclass', 'assertpreconditions', 'assertpostconditions'];
+    private const HOOK_ATTRIBUTES = [
+        'PHPUnit\Framework\Attributes\After',
+        'PHPUnit\Framework\Attributes\AfterClass',
+        'PHPUnit\Framework\Attributes\Before',
+        'PHPUnit\Framework\Attributes\BeforeClass',
+        'PHPUnit\Framework\Attributes\PostCondition',
+        'PHPUnit\Framework\Attributes\PreCondition',
+    ];
     private const SPY_VERIFICATIONS = [
         'shouldhave',
         'shouldhavebeencalled',
@@ -57,6 +66,25 @@ final class TestMethod
         $doc = $method->getDocComment();
 
         return $doc !== null && preg_match('/@test\b/', $doc->getText()) === 1;
+    }
+
+    public static function isHook(Stmt\ClassMethod $method): bool
+    {
+        if (in_array($method->name->toLowerString(), self::HOOKS, true)) {
+            return true;
+        }
+
+        foreach ($method->attrGroups as $group) {
+            foreach ($group->attrs as $attribute) {
+                if (in_array($attribute->name->toString(), self::HOOK_ATTRIBUTES, true)) {
+                    return true;
+                }
+            }
+        }
+
+        $doc = $method->getDocComment();
+
+        return $doc !== null && preg_match('/@(before|after|beforeClass|afterClass|preCondition|postCondition)\b/', $doc->getText()) === 1;
     }
 
     public static function callName(Node $node): ?string
