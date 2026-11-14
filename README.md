@@ -4,6 +4,8 @@ PHPStan rules that check the **shape** of PHPUnit tests: assertions last, no gua
 
 A test earns trust in two dynamic ways: it fails when the implementation is removed, and it kills mutants (Infection). Both run the suite. This extension adds a cheaper, static level in front of them: it reads the test code and rejects the shapes that make a test lie or hard to read, in seconds, before anything runs. It does not replace the dynamic checks: a well-shaped test can still assert nothing useful.
 
+Why a PHPStan extension and not Mago, Semgrep, a PHP_CodeSniffer standard or a PHPUnit test: see [docs/why-phpstan.md](docs/why-phpstan.md).
+
 ## Installation
 
 ```bash
