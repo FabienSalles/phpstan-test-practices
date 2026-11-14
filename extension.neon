@@ -9,6 +9,12 @@ parameters:
             noProductionConstantAsExpected: error
             oneVerifiedDoublePerTest: error
             spyOverMock: warning
+            preferInMemoryDouble: warning
+        preferInMemoryDouble:
+            threshold: 2
+        assertionCount:
+            warningFrom: 3
+            errorFrom: 4
 
 parametersSchema:
     testPractices: structure({
@@ -20,6 +26,14 @@ parametersSchema:
             noProductionConstantAsExpected: anyOf('error', 'warning'),
             oneVerifiedDoublePerTest: anyOf('error', 'warning'),
             spyOverMock: anyOf('error', 'warning'),
+            preferInMemoryDouble: anyOf('error', 'warning'),
+        }),
+        preferInMemoryDouble: structure({
+            threshold: schema(int(), min(1)),
+        }),
+        assertionCount: structure({
+            warningFrom: schema(int(), min(1)),
+            errorFrom: schema(int(), min(1)),
         }),
     })
 
@@ -68,5 +82,21 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\SpyOverMockRule
         arguments:
             severity: %testPractices.severity.spyOverMock%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\PreferInMemoryDoubleRule
+        arguments:
+            threshold: %testPractices.preferInMemoryDouble.threshold%
+            severity: %testPractices.severity.preferInMemoryDouble%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\AssertionCountRule
+        arguments:
+            warningFrom: %testPractices.assertionCount.warningFrom%
+            errorFrom: %testPractices.assertionCount.errorFrom%
         tags:
             - phpstan.rules.rule
