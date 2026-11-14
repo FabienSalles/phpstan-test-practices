@@ -3,6 +3,7 @@ parameters:
     testPractices:
         level: max
         errorFormat: table
+        diffBase: null
         severity:
             assertionsLast: error
             noGuardAssertion: error
@@ -21,6 +22,7 @@ parametersSchema:
     testPractices: structure({
         level: anyOf(schema(int(), min(0), max(3)), 'max'),
         errorFormat: string(),
+        diffBase: schema(string(), nullable()),
         severity: structure({
             assertionsLast: anyOf('error', 'warning'),
             noGuardAssertion: anyOf('error', 'warning'),
@@ -44,6 +46,8 @@ services:
         class: FabienSalles\PHPStanTestPractices\Severity\SeverityErrorFormatter
         arguments:
             innerFormat: %testPractices.errorFormat%
+            diffBase: %testPractices.diffBase%
+            workingDirectory: %currentWorkingDirectory%
 
     -
         class: FabienSalles\PHPStanTestPractices\Rules\AssertionsLastRule
