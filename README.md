@@ -156,13 +156,18 @@ self::assertSame($expectedDiscount, $calculator->discount($order));
 
 ### `testPractices.noProductionConstantAsExpected`
 
-Enum cases, constants of the test class itself, built-in classes and `Foo::class` are not reported.
+Only the **expected** argument of an assertion is checked: the argument of an assertion method whose first parameter is named `$expected…` (`assertSame`, `assertEquals`, `assertNotSame`, `assertNotEquals`, `assertEqualsCanonicalizing`, `assertCount`, `assertJsonStringEqualsJsonString`...), passed positionally or as a named argument. A production constant anywhere else is fine: building a fixture or a stub (arrange), calling the code under test (act), in a data provider, or as the actual value. Enum cases, constants of the test class itself, built-in classes and `Foo::class` are not reported.
 
 ```php
 // ❌
 self::assertSame(OrderController::STATUS_CONFIRMED, $payload['status']);
 
 // ✅
+self::assertSame('CONFIRMED', $payload['status']);
+
+// ✅ the constant drives the scenario, the expectation stays literal
+$order = new Order(OrderController::STATUS_CONFIRMED);
+$payload = $controller->show($order);
 self::assertSame('CONFIRMED', $payload['status']);
 ```
 

@@ -9,6 +9,7 @@ use FabienSalles\PHPStanTestPractices\TestMethod;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PHPStan\Analyser\Scope;
+use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
@@ -18,8 +19,6 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final readonly class NoProductionConstantAsExpectedRule implements Rule
 {
-    private const COMPARISONS = ['assertequals', 'assertsame'];
-
     public function __construct(
         private ReflectionProvider $reflectionProvider,
         private string $severity,
@@ -33,16 +32,12 @@ final readonly class NoProductionConstantAsExpectedRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!TestMethod::isPhpUnitAssertion($node) || !in_array(strtolower((string) TestMethod::callName($node)), self::COMPARISONS, true)) {
-            return [];
-        }
-
         $class = $scope->getClassReflection();
-        if ($class === null || !TestMethod::isTestCase($class) || $node->isFirstClassCallable() || count($node->getArgs()) < 2) {
+        if (!TestMethod::isPhpUnitAssertion($node) || $class === null || !TestMethod::isTestCase($class) || $node->isFirstClassCallable()) {
             return [];
         }
 
-        $expected = $node->getArgs()[0]->value;
+        $expected = self::expectedArgument($node, $class);
         if (!$expected instanceof Expr\ClassConstFetch || !$expected->class instanceof Node\Name || !$expected->name instanceof Node\Identifier) {
             return [];
         }
@@ -72,5 +67,26 @@ final readonly class NoProductionConstantAsExpectedRule implements Rule
                 ->metadata(Severity::metadata($this->severity))
                 ->build(),
         ];
+    }
+
+    private static function expectedArgument(Expr\CallLike $call, ClassReflection $class): ?Expr
+    {
+        $method = (string) TestMethod::callName($call);
+        if (!$class->hasNativeMethod($method)) {
+            return null;
+        }
+
+        $parameter = $class->getNativeMethod($method)->getOnlyVariant()->getParameters()[0] ?? null;
+        if ($parameter === null || !str_starts_with($parameter->getName(), 'expected')) {
+            return null;
+        }
+
+        foreach ($call->getArgs() as $position => $argument) {
+            if ($argument->name?->toString() === $parameter->getName() || ($position === 0 && $argument->name === null && !$argument->unpack)) {
+                return $argument->value;
+            }
+        }
+
+        return null;
     }
 }

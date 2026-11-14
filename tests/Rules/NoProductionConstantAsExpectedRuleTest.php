@@ -13,7 +13,7 @@ use PHPStan\Testing\RuleTestCase;
  */
 final class NoProductionConstantAsExpectedRuleTest extends RuleTestCase
 {
-    private const MESSAGE = 'Expected value Fixtures\NoProductionConstantAsExpected\OrderController::STATUS_CONFIRMED is a production constant: the assertion compares the constant with itself. Write the literal value instead.';
+    private const MESSAGE = 'Expected value Fixtures\NoProductionConstantAsExpected\OrderController::%s is a production constant: the assertion compares the constant with itself. Write the literal value instead.';
     private const TIP = 'If the constant itself is the contract under test, keep it and add "// @phpstan-ignore testPractices.noProductionConstantAsExpected" on this line.';
 
     protected function getRule(): Rule
@@ -21,11 +21,13 @@ final class NoProductionConstantAsExpectedRuleTest extends RuleTestCase
         return new NoProductionConstantAsExpectedRule(self::createReflectionProvider(), 'error');
     }
 
-    public function testFlagsProductionConstantsButNotEnumsOwnConstantsClassNamesOrIgnoredLines(): void
+    public function testFlagsProductionConstantsOnlyInTheExpectedPositionOfAnAssertion(): void
     {
         $this->analyse([__DIR__ . '/../Fixtures/Rules/NoProductionConstantAsExpected.php'], [
-            [self::MESSAGE, 32, self::TIP],
-            [self::MESSAGE, 39, self::TIP],
+            [sprintf(self::MESSAGE, 'STATUS_CONFIRMED'), 51, self::TIP],
+            [sprintf(self::MESSAGE, 'STATUS_CONFIRMED'), 58, self::TIP],
+            [sprintf(self::MESSAGE, 'STATUS_CANCELLED'), 65, self::TIP],
+            [sprintf(self::MESSAGE, 'STATUS_CONFIRMED'), 72, self::TIP],
         ]);
     }
 }
