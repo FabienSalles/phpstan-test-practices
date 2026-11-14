@@ -53,7 +53,8 @@ final class SeverityErrorFormatterTest extends TestCase
     private static function phpstan(string $config, string ...$paths): array
     {
         $command = sprintf(
-            '%s %s analyse --no-progress --no-interaction --memory-limit=512M -c %s %s 2>/dev/null',
+            'cd %s && %s %s analyse --no-progress --no-interaction --memory-limit=512M -c %s %s 2>/dev/null',
+            escapeshellarg(self::FIXTURES),
             escapeshellarg(PHP_BINARY),
             escapeshellarg(__DIR__ . '/../../vendor/bin/phpstan'),
             escapeshellarg(self::FIXTURES . '/' . $config),

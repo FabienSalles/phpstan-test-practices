@@ -92,7 +92,8 @@ final class CorpusTest extends TestCase
     {
         $directory = self::CORPUS . '/' . $corpus;
         $command = sprintf(
-            '%s %s analyse --no-progress --no-interaction --memory-limit=512M --error-format=json -c %s %s 2>/dev/null',
+            'cd %s && %s %s analyse --no-progress --no-interaction --memory-limit=512M --error-format=json -c %s %s 2>/dev/null',
+            escapeshellarg($directory),
             escapeshellarg(PHP_BINARY),
             escapeshellarg(__DIR__ . '/../../vendor/bin/phpstan'),
             escapeshellarg($directory . '/phpstan.neon'),
