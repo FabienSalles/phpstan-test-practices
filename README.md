@@ -83,9 +83,37 @@ parameters:
             testMethodIsDiscoverable: error
             testClassSuffix: error
             testFileInTestsuite: error
+            noTryCatchInTest: error
+            noControlFlowInTest: error
+            expectExceptionBeforeAct: error
+            noDependsBetweenTests: error
+            noFixtureInSetUp: warning
+            permissiveStub: warning
+            prophecyOverCreateMockCallback: warning
+            dontMockWhatYouDontOwn: error
+            noStubReturnAsExpected: error
+            noUnusedDouble: error
+            noTestOfLogging: warning
+            frozenClock: error
+            dataProviderNamedKeys: error
+            exceptionTestNamesException: error
+            structuredAssertion: warning
+            builtInWebAssertions: warning
+            noKernelForPureFunction: warning
+            noTestCaseConstructor: error
         phpunitConfiguration: null
         testClassSuffix:
             suffix: Test
+        dontMockWhatYouDontOwn:
+            classes:
+                - Doctrine\ORM\QueryBuilder
+                - Doctrine\ORM\EntityManagerInterface
+                - Doctrine\ORM\Query
+                - Doctrine\DBAL\Connection
+                - GuzzleHttp\ClientInterface
+                - Symfony\Contracts\HttpClient\HttpClientInterface
+        noTestOfLogging:
+            enabled: false
         preferInMemoryDouble:
             threshold: 2
         assertionCount:
@@ -101,6 +129,8 @@ parameters:
 | `severity.<rule>` | `error`, `warning` | Severity of each rule |
 | `phpunitConfiguration` | `null`, a path | PHPUnit configuration read by `testFileInTestsuite`; `null` looks for `phpunit.xml`, `phpunit.dist.xml`, `phpunit.xml.dist` in the working directory |
 | `testClassSuffix.suffix` | string | Suffix every concrete test class must end with |
+| `dontMockWhatYouDontOwn.classes` | list of class names | Third-party types that must not be doubled (subclasses and implementations included) |
+| `noTestOfLogging.enabled` | bool | Turns on the opt-in `noTestOfLogging` rule |
 | `preferInMemoryDouble.threshold` | int ≥ 1 | Number of test methods doubling the same class before it is reported |
 | `assertionCount.warningFrom` | int ≥ 1 | Assertions per test from which a warning is reported |
 | `assertionCount.errorFrom` | int ≥ 1 | Assertions per test from which an error is reported |
@@ -118,14 +148,32 @@ Each rule has its own page: what it detects, a failing example with the real PHP
 | [`testPractices.testMethodIsDiscoverable`](docs/rules/testMethodIsDiscoverable.md) | 0 | error | A method with assertions that is neither a test nor called by one never runs |
 | [`testPractices.assertionsLast`](docs/rules/assertionsLast.md) | 0 | error | Arrange, act, assert: an assertion before the act, or hidden in an arrange callback, reads as a step of the scenario and fails with a confusing message |
 | [`testPractices.noComputedExpectedValue`](docs/rules/noComputedExpectedValue.md) | 0 | error | An expected value computed with the same logic as the code passes by construction |
+| [`testPractices.noStubReturnAsExpected`](docs/rules/noStubReturnAsExpected.md) | 0 | error | Expecting what a stub returns checks the stub, not the code |
+| [`testPractices.noTryCatchInTest`](docs/rules/noTryCatchInTest.md) | 0 | error | A try/catch passes when nothing is thrown |
+| [`testPractices.expectExceptionBeforeAct`](docs/rules/expectExceptionBeforeAct.md) | 0 | error | Statements after a throwing act never run |
 | [`testPractices.noGuardAssertion`](docs/rules/noGuardAssertion.md) | 1 | error | A guard (`assertCount`, `assertInstanceOf`, `assertNotNull`, `assertIs*`...) stops the test before the real assertion shows its diff |
 | [`testPractices.noProductionConstantAsExpected`](docs/rules/noProductionConstantAsExpected.md) | 1 | error | Comparing a production constant with itself never fails when its value changes |
+| [`testPractices.noControlFlowInTest`](docs/rules/noControlFlowInTest.md) | 1 | error | A branch or a loop in a test leaves some paths unchecked |
+| [`testPractices.noDependsBetweenTests`](docs/rules/noDependsBetweenTests.md) | 1 | error | A dependent test cannot run alone and is skipped when the other fails |
+| [`testPractices.frozenClock`](docs/rules/frozenClock.md) | 1 | error | A test reading the system clock depends on when it runs |
+| [`testPractices.noUnusedDouble`](docs/rules/noUnusedDouble.md) | 1 | error | An unused double is noise, or a forgotten argument of the act |
+| [`testPractices.noTestCaseConstructor`](docs/rules/noTestCaseConstructor.md) | 1 | error | PHPUnit owns the constructor of a test case |
 | [`testPractices.oneVerifiedDoublePerTest`](docs/rules/oneVerifiedDoublePerTest.md) | 2 | error | Several verified doubles mean several intentions in one test |
 | [`testPractices.assertionCount`](docs/rules/assertionCount.md) | 2 | 3: warning, 4+: error | One structured assertion reads better and fails with a complete diff; many assertions usually hide several intentions |
+| [`testPractices.structuredAssertion`](docs/rules/structuredAssertion.md) | 2 | warning | Two assertions on fields of one value hide the second difference |
+| [`testPractices.dontMockWhatYouDontOwn`](docs/rules/dontMockWhatYouDontOwn.md) | 2 | error | A double of a library type copies how the library is called |
+| [`testPractices.dataProviderNamedKeys`](docs/rules/dataProviderNamedKeys.md) | 2 | error | An unnamed data set fails as "data set #0" |
+| [`testPractices.exceptionTestNamesException`](docs/rules/exceptionTestNamesException.md) | 2 | error | An exception test names the error it expects |
 | [`testPractices.spyOverMock`](docs/rules/spyOverMock.md) | 3 | warning | A verification set before the act (mock) breaks arrange-act-assert; a spy verifies after the act |
 | [`testPractices.preferInMemoryDouble`](docs/rules/preferInMemoryDouble.md) | 3 | warning | The same dependency doubled in several tests is a sign that a reusable in-memory implementation would be shorter and sturdier |
+| [`testPractices.noFixtureInSetUp`](docs/rules/noFixtureInSetUp.md) | 3 | warning | Fixtures and doubles built in setUp() hide each scenario |
+| [`testPractices.permissiveStub`](docs/rules/permissiveStub.md) | 3 | warning | A stub provides data; constraining its arguments is a hidden verification |
+| [`testPractices.prophecyOverCreateMockCallback`](docs/rules/prophecyOverCreateMockCallback.md) | 3 | warning | A scripted PHPUnit double reads better as Prophecy promises |
+| [`testPractices.builtInWebAssertions`](docs/rules/builtInWebAssertions.md) | 3 | warning | Symfony's web assertions read better and fail with the response |
+| [`testPractices.noKernelForPureFunction`](docs/rules/noKernelForPureFunction.md) | 3 | warning | Booting a kernel for plain objects is slow and couples the test to the container |
+| [`testPractices.noTestOfLogging`](docs/rules/noTestOfLogging.md) | 3 | warning, opt-in | Logging is rarely the behaviour under test |
 
-Three rules can fix what they report: `noProductionConstantAsExpected` (the constant becomes its literal value), `noGuardAssertion` (the guard is removed) and `spyOverMock` for Prophecy expectations (moved after the act as a spy verification). Run `vendor/bin/phpstan analyse --fix`, review the diff, and rerun your code style fixer: PHPStan's printer may drop a blank line around a changed statement. Each rule page says whether it is auto-fixable and why.
+Four rules can fix what they report: `noProductionConstantAsExpected` (the constant becomes its literal value), `noGuardAssertion` (the guard is removed), `spyOverMock` for Prophecy expectations (moved after the act as a spy verification) and `builtInWebAssertions` for status codes (`assertResponseStatusCodeSame()`). Run `vendor/bin/phpstan analyse --fix`, review the diff, and rerun your code style fixer: PHPStan's printer may drop a blank line around a changed statement. Each rule page says whether it is auto-fixable and why.
 
 ## Levels
 
@@ -133,10 +181,10 @@ Three rules can fix what they report: `noProductionConstantAsExpected` (the cons
 
 | Level | Adds | Why at this level |
 |---|---|---|
-| 0 | `testFileInTestsuite`, `testClassSuffix`, `testMethodIsDiscoverable`, `assertionsLast`, `noComputedExpectedValue` | A test that never runs, a computed expectation that passes by construction, an assertion in the arrange that may never run: each makes a test lie, with almost no false positive |
-| 1 | `noGuardAssertion`, `noProductionConstantAsExpected` | Tautologies and hidden diffs, with a few legitimate exceptions (a constant that is the contract, two real expectations) |
-| 2 | `oneVerifiedDoublePerTest`, `assertionCount` | Heuristics about intentions per test: valuable, but thresholds and interaction-heavy tests make exceptions more common |
-| 3 (`max`, default) | `spyOverMock`, `preferInMemoryDouble` | Design preferences, warnings by default |
+| 0 | `testFileInTestsuite`, `testClassSuffix`, `testMethodIsDiscoverable`, `assertionsLast`, `noComputedExpectedValue`, `noStubReturnAsExpected`, `noTryCatchInTest`, `expectExceptionBeforeAct` | A test that never runs, an expectation that passes by construction (computed, or returned by a stub), an assertion that never executes (in the arrange, after a throwing act, in a skipped catch): each makes a test lie, with almost no false positive |
+| 1 | `noGuardAssertion`, `noProductionConstantAsExpected`, `noControlFlowInTest`, `noDependsBetweenTests`, `frozenClock`, `noUnusedDouble`, `noTestCaseConstructor` | Tautologies, hidden diffs, flaky or dependent tests and noise, with a few legitimate exceptions (a constant that is the contract, a loop building a fixture) |
+| 2 | `oneVerifiedDoublePerTest`, `assertionCount`, `structuredAssertion`, `dontMockWhatYouDontOwn`, `dataProviderNamedKeys`, `exceptionTestNamesException` | Heuristics about intentions, naming and design: valuable, but thresholds, interaction-heavy tests and project conventions make exceptions more common |
+| 3 (`max`, default) | `spyOverMock`, `preferInMemoryDouble`, `noFixtureInSetUp`, `permissiveStub`, `prophecyOverCreateMockCallback`, `builtInWebAssertions`, `noKernelForPureFunction`, `noTestOfLogging` | Design preferences, warnings by default |
 
 ```neon
 parameters:
