@@ -39,7 +39,8 @@ The eight rules ask more of a host than "match this pattern":
 | phpstan/phpstan-strict-rules | PHPStan extension | Nothing on tests | Unrelated |
 | ergebnis/phpstan-rules | PHPStan extension | One test rule | Complementary |
 | spaze/phpstan-disallowed-calls | PHPStan extension | Bans calls, no order | Complementary |
-| ikvasnica/phpstan-clean-test | PHPStan extension | Other rules, PHPStan 1 | Not installable with PHPStan 2 |
+| ikvasnica/phpstan-clean-test | PHPStan extension | Other rules, PHPStan 1 | Not installable with PHPStan 2; ideas reimplemented here |
+| haspadar/phpstan-rules | PHPStan extension | No test rule yet | Complementary |
 | PHPUnit strictness options | Runtime | Different checks | Turn them on as well |
 | Infection, implementation removal | Runtime | Different proof | Complementary |
 
@@ -180,7 +181,8 @@ These run in the same PHPStan process and add to this extension rather than repl
 - **[phpstan/phpstan-strict-rules](https://github.com/phpstan/phpstan-strict-rules).** Type strictness for all code; nothing test-specific. Verdict: unrelated.
 - **[ergebnis/phpstan-rules](https://github.com/ergebnis/phpstan-rules).** One test rule, `TestCaseWithSuffixRule`. Verdict: complementary.
 - **[spaze/phpstan-disallowed-calls](https://github.com/spaze/phpstan-disallowed-calls).** Bans functions, methods, classes, constants, namespaces, with `allowInPaths`, `allowInInstanceOf` and other scopes. It can ban `ReflectionMethod::setAccessible()` in tests or `sleep()`; it cannot express order or count. Verdict: complementary.
-- **[ikvasnica/phpstan-clean-test](https://github.com/ikvasnica/phpstan-clean-test).** `DisallowSetupAndConstructorRule`, `AssertSameOverAssertEqualsRule`, `StaticAssertOverThisAndStaticRule`, `UnitExtendsFromTestCaseRule`, `NoNullableArgumentRule`. Its `composer.json` requires `phpstan/phpstan: ^1.10`, last push 2023-08-23. Verdict: not installable with PHPStan 2.
+- **[ikvasnica/phpstan-clean-test](https://github.com/ikvasnica/phpstan-clean-test).** `DisallowSetupAndConstructorRule`, `AssertSameOverAssertEqualsRule`, `StaticAssertOverThisAndStaticRule`, `UnitExtendsFromTestCaseRule`, `NoNullableArgumentRule`. Its `composer.json` requires `phpstan/phpstan: ^1.10`, last push 2023-08-23. Verdict: not installable with PHPStan 2. This extension reimplements the ideas it lacked: the constructor half of `DisallowSetupAndConstructorRule` became [`noTestCaseConstructor`](rules/noTestCaseConstructor.md), the `setUp()` half is covered more narrowly by [`noFixtureInSetUp`](rules/noFixtureInSetUp.md) (fixtures and doubles, not the environment), and `UnitExtendsFromTestCaseRule` by [`noKernelForPureFunction`](rules/noKernelForPureFunction.md). The other two are already in `phpstan/phpstan-phpunit` and PHP-CS-Fixer.
+- **[haspadar/phpstan-rules](https://github.com/haspadar/phpstan-rules).** General design and documentation rules (complexity, coupling, nulls, comments such as `NoInlineCommentRule`), with a `testsPaths` parameter that keeps production rules off the tests; its README announces test-oriented rules "when introduced", and none exists yet (checked 2026-11-15). Verdict: complementary, nothing to take for test shape.
 
 ## Runtime checks
 
