@@ -11,12 +11,15 @@ final class RuleDocumentationTest extends TestCase
 {
     private const ROOT = __DIR__ . '/../..';
 
+    /** @var list<array{file: string, line: int, message: string, identifier: string}>|null */
+    private static ?array $messages = null;
+
     #[DataProvider('provideRules')]
     public function testThePageShowsItsFixturesAndTheirRealOutput(string $rule): void
     {
         $page = (string) file_get_contents(self::ROOT . '/docs/rules/' . $rule . '.md');
         $fixtures = 'tests/Fixtures/Docs/' . $rule;
-        $messages = self::analyse($fixtures);
+        $messages = array_values(array_filter(self::analyse(), static fn (array $message): bool => str_starts_with($message['file'], $fixtures . '/')));
         $output = implode("\n", array_map(static fn (array $message): string => sprintf('%s:%d:%s', $message['file'], $message['line'], $message['message']), $messages));
 
         self::assertSame(
@@ -50,14 +53,18 @@ final class RuleDocumentationTest extends TestCase
     /**
      * @return list<array{file: string, line: int, message: string, identifier: string}>
      */
-    private static function analyse(string $path): array
+    private static function analyse(): array
     {
+        if (self::$messages !== null) {
+            return self::$messages;
+        }
+
         $command = sprintf(
             'cd %s && %s %s analyse --no-progress --no-interaction --memory-limit=512M --error-format=json -c phpstan.neon %s 2>/dev/null',
             escapeshellarg(self::ROOT . '/tests/Fixtures/Docs'),
             escapeshellarg(PHP_BINARY),
             escapeshellarg(self::ROOT . '/vendor/bin/phpstan'),
-            escapeshellarg(self::ROOT . '/' . $path),
+            escapeshellarg(self::ROOT . '/tests/Fixtures/Docs'),
         );
         exec($command, $output);
         $root = (string) realpath(self::ROOT) . '/';
@@ -71,6 +78,8 @@ final class RuleDocumentationTest extends TestCase
                 $messages[] = ['file' => str_replace($root, '', $file), 'line' => $message['line'], 'message' => $message['message'], 'identifier' => $message['identifier']];
             }
         }
+
+        self::$messages = $messages;
 
         return $messages;
     }
