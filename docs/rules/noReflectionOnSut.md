@@ -4,7 +4,7 @@ No reflection on the system under test. Enabled from `testPractices.level` **2**
 
 Auto-fixable: no. The replacement is a test through the public API, which only the author can write.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [testing-principles › No Reflection on the Code Under Test](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#no-reflection-on-the-code-under-test).
 
 ## What it detects
 

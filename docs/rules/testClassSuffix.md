@@ -4,7 +4,7 @@ Test class suffix. Enabled from `testPractices.level` **0** (see [levels](../../
 
 Auto-fixable: no. Renaming the class means renaming its file, which a PHPStan fix cannot do.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [php-test-conventions › Test Class Suffix](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#test-class-suffix).
 
 ## What it detects
 

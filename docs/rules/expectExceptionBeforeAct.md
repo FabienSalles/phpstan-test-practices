@@ -4,7 +4,7 @@ Nothing after the throwing act. Enabled from `testPractices.level` **0** (see [l
 
 Auto-fixable: no. The statements after the act are assertions someone meant to run; deleting them would hide that intention instead of moving it to another test.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [php-test-conventions › The Act Is the Last Line After expectException](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#the-act-is-the-last-line-after-expectexception).
 
 ## What it detects
 

@@ -4,7 +4,7 @@ No try/catch in a test. Enabled from `testPractices.level` **0** (see [levels](.
 
 Auto-fixable: no. Turning the catch block into `expectException()` / `expectExceptionMessage()` needs to know which assertions of the catch block are the expectation.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [php-test-conventions › No try-catch in a Test Body](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#no-try-catch-in-a-test-body).
 
 ## What it detects
 

@@ -4,7 +4,7 @@ No test case constructor. Enabled from `testPractices.level` **1** (see [levels]
 
 Auto-fixable: no. What the constructor builds has to move into each test or into setUp(), depending on what it is.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [php-test-conventions › PHP-specific: No TestCase Constructor](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#php-specific-no-testcase-constructor).
 
 ## What it detects
 

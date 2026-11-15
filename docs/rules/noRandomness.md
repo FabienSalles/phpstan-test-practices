@@ -4,7 +4,7 @@ No randomness. Enabled from `testPractices.level` **1** (see [levels](../../READ
 
 Auto-fixable: no. The fixed value to use instead depends on what the test means.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [testing-principles › No Randomness](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#no-randomness).
 
 ## What it detects
 
