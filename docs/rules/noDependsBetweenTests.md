@@ -4,7 +4,7 @@ No dependency between tests. Enabled from `testPractices.level` **1** (see [leve
 
 Auto-fixable: no. Removing `#[Depends]` leaves the test without the value it received; building that value is up to the test.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [testing-principles › No Dependency Between Tests](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#no-dependency-between-tests).
 
 ## What it detects
 

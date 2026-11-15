@@ -4,7 +4,7 @@ No control flow in a test. Enabled from `testPractices.level` **1** (see [levels
 
 Auto-fixable: no. Unrolling a loop or splitting a branch into separate tests is a design choice.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [testing-principles › No Control Flow in a Test Body](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#no-control-flow-in-a-test-body).
 
 ## What it detects
 

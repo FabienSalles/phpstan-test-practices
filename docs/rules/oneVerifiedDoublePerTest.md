@@ -4,7 +4,7 @@ One verified double per test. Enabled from `testPractices.level` **2** (see [lev
 
 Auto-fixable: no. Splitting a test into one test per intention needs names and a choice of which collaborators become stubs.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [testing-principles › One Verified Double per Test](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#one-verified-double-per-test).
 
 ## What it detects
 

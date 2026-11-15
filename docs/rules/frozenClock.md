@@ -4,7 +4,7 @@ Frozen clock. Enabled from `testPractices.level` **1** (see [levels](../../READM
 
 Auto-fixable: no. The absolute date to use, and how to inject a clock into the code under test, are choices of the test author.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [testing-principles › Freeze the Clock](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#freeze-the-clock).
 
 ## What it detects
 

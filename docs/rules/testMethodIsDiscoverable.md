@@ -4,7 +4,7 @@ Test method is discoverable. Enabled from `testPractices.level` **0** (see [leve
 
 Auto-fixable: no. The finding is computed from collected data across files, and PHPStan attaches a fix only to the AST node of a rule that runs on that node. Add `#[Test]` (PHPUnit 10 and later) or the `test` prefix by hand.
 
-Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+Related skill: [php-test-conventions › Every Assertion Method Is Discoverable](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#every-assertion-method-is-discoverable).
 
 ## What it detects
 
