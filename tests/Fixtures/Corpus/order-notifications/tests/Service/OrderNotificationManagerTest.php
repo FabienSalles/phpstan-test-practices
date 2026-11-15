@@ -23,7 +23,7 @@ class OrderNotificationManagerTest extends KernelTestCase
     use MatchesSnapshots;
     use ProphecyTrait;
 
-    private const FROM_EMAIL = 'noreply@shop-training.com';
+    private const FROM_EMAIL = 'noreply@shop.example.com';
 
     #[DataProvider('orderConfirmationProvider')]
     public function testSendOrderConfirmation(Order $order, string $expectedSubject): void

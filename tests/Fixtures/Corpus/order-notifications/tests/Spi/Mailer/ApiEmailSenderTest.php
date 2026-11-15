@@ -18,7 +18,7 @@ class ApiEmailSenderTest extends TestCase
     public function testSendsEmailViaApi(): void
     {
         $email = (new Email())
-            ->from('noreply@shop-training.com')
+            ->from('noreply@shop.example.com')
             ->to('jean.dupont@example.com')
             ->subject('Confirmation de commande')
             ->html('<p>Bonjour Jean</p>');
@@ -35,7 +35,7 @@ class ApiEmailSenderTest extends TestCase
                 'method' => 'POST',
                 'url' => self::API_URL . '/emails',
                 'body' => [
-                    'from' => 'noreply@shop-training.com',
+                    'from' => 'noreply@shop.example.com',
                     'to' => 'jean.dupont@example.com',
                     'subject' => 'Confirmation de commande',
                     'body' => '<p>Bonjour Jean</p>',
@@ -56,7 +56,7 @@ class ApiEmailSenderTest extends TestCase
     public function testSendsEmailWithAttachment(): void
     {
         $email = (new Email())
-            ->from('noreply@shop-training.com')
+            ->from('noreply@shop.example.com')
             ->to('jean.dupont@example.com')
             ->subject('Votre facture')
             ->html('<p>Ci-joint votre facture</p>')

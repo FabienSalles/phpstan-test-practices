@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conveycode\PhpunitExercice\Tests;
+namespace Example\HttpClient\Tests;
 
-use Conveycode\PhpunitExercice\ChuckNorrisClient;
-use Conveycode\PhpunitExercice\ChuckNorrisGuzzleHttpClient;
-use Conveycode\PhpunitExercice\HttpClient;
+use Example\HttpClient\ChuckNorrisClient;
+use Example\HttpClient\ChuckNorrisGuzzleHttpClient;
+use Example\HttpClient\HttpClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conveycode\PhpunitExercice\Tests;
+namespace Example\HttpClient\Tests;
 
-use Conveycode\PhpunitExercice\ChuckNorrisGuzzleHttpClient;
+use Example\HttpClient\ChuckNorrisGuzzleHttpClient;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 

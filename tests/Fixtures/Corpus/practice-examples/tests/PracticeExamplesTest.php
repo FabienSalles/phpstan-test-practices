@@ -12,7 +12,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
-final class SlideExamplesTest extends TestCase
+final class PracticeExamplesTest extends TestCase
 {
     use ProphecyTrait;
 

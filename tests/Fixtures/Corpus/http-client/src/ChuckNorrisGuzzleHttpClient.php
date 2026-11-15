@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conveycode\PhpunitExercice;
+namespace Example\HttpClient;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;

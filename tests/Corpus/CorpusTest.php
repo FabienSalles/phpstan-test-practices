@@ -27,8 +27,8 @@ final class CorpusTest extends TestCase
      */
     public static function provideCorpora(): iterable
     {
-        yield 'the bad tests of the exercise' => [
-            'corpus' => 'main',
+        yield 'an order application with smelly tests' => [
+            'corpus' => 'orders-smelly',
             'expectedFindings' => [
                 'Calculator/OrderDiscountCalculatorTest.php:30 testPractices.noComputedExpectedValue',
                 'Controller/OrderControllerTest.php:21 testPractices.noProductionConstantAsExpected',
@@ -52,8 +52,8 @@ final class CorpusTest extends TestCase
             ],
         ];
 
-        yield 'the fixed tests of the exercise' => [
-            'corpus' => 'solution',
+        yield 'the same application with refactored tests' => [
+            'corpus' => 'orders-refactored',
             'expectedFindings' => [
                 'Calculator/OrderDiscountCalculatorTest.php:30 testPractices.noComputedExpectedValue',
                 'Processor/OrderProcessorTest.php:21 testPractices.preferInMemoryDouble',
@@ -67,29 +67,29 @@ final class CorpusTest extends TestCase
             ],
         ];
 
-        yield 'the slide examples' => [
-            'corpus' => 'slides',
+        yield 'one example per practice' => [
+            'corpus' => 'practice-examples',
             'expectedFindings' => [
-                'SlideExamplesTest.php:23 testPractices.noGuardAssertion',
-                'SlideExamplesTest.php:24 testPractices.assertionsLast',
-                'SlideExamplesTest.php:29 testPractices.assertionCount',
-                'SlideExamplesTest.php:34 testPractices.noGuardAssertion',
-                'SlideExamplesTest.php:35 testPractices.noGuardAssertion',
-                'SlideExamplesTest.php:36 testPractices.noGuardAssertion',
-                'SlideExamplesTest.php:40 testPractices.oneVerifiedDoublePerTest',
-                'SlideExamplesTest.php:43 testPractices.preferInMemoryDouble',
-                'SlideExamplesTest.php:44 testPractices.spyOverMock',
-                'SlideExamplesTest.php:46 testPractices.spyOverMock',
+                'PracticeExamplesTest.php:23 testPractices.noGuardAssertion',
+                'PracticeExamplesTest.php:24 testPractices.assertionsLast',
+                'PracticeExamplesTest.php:29 testPractices.assertionCount',
+                'PracticeExamplesTest.php:34 testPractices.noGuardAssertion',
+                'PracticeExamplesTest.php:35 testPractices.noGuardAssertion',
+                'PracticeExamplesTest.php:36 testPractices.noGuardAssertion',
+                'PracticeExamplesTest.php:40 testPractices.oneVerifiedDoublePerTest',
+                'PracticeExamplesTest.php:43 testPractices.preferInMemoryDouble',
+                'PracticeExamplesTest.php:44 testPractices.spyOverMock',
+                'PracticeExamplesTest.php:46 testPractices.spyOverMock',
             ],
         ];
 
-        yield 'the HTTP client exercise' => [
-            'corpus' => 'phpunit-exercice',
+        yield 'an HTTP client' => [
+            'corpus' => 'http-client',
             'expectedFindings' => [],
         ];
 
-        yield 'the mailer exercise' => [
-            'corpus' => 'phpunit-mailer-exercice',
+        yield 'order notifications' => [
+            'corpus' => 'order-notifications',
             'expectedFindings' => [
                 'Service/OrderNotificationManagerTest.php:36 testPractices.preferInMemoryDouble',
                 'Spi/Mailer/ApiEmailSenderTest.php:18 testPractices.assertionCount',
