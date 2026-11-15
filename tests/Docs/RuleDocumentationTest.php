@@ -42,7 +42,7 @@ final class RuleDocumentationTest extends TestCase
      */
     public static function provideRules(): iterable
     {
-        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount', 'testFileInTestsuite', 'testClassSuffix', 'testMethodIsDiscoverable', 'noTryCatchInTest', 'noControlFlowInTest', 'expectExceptionBeforeAct', 'noDependsBetweenTests', 'noFixtureInSetUp', 'permissiveStub', 'prophecyOverCreateMockCallback', 'dontMockWhatYouDontOwn', 'noStubReturnAsExpected', 'noUnusedDouble', 'noTestOfLogging'] as $rule) {
+        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount', 'testFileInTestsuite', 'testClassSuffix', 'testMethodIsDiscoverable', 'noTryCatchInTest', 'noControlFlowInTest', 'expectExceptionBeforeAct', 'noDependsBetweenTests', 'noFixtureInSetUp', 'permissiveStub', 'prophecyOverCreateMockCallback', 'dontMockWhatYouDontOwn', 'noStubReturnAsExpected', 'noUnusedDouble', 'noTestOfLogging', 'frozenClock', 'dataProviderNamedKeys', 'exceptionTestNamesException', 'structuredAssertion', 'builtInWebAssertions', 'noKernelForPureFunction', 'noTestCaseConstructor'] as $rule) {
             yield $rule => [$rule];
         }
     }
@@ -64,6 +64,10 @@ final class RuleDocumentationTest extends TestCase
         $messages = [];
         foreach (json_decode(implode("\n", $output), true, flags: JSON_THROW_ON_ERROR)['files'] ?? [] as $file => $result) {
             foreach ($result['messages'] as $message) {
+                if (!str_starts_with($message['identifier'] ?? '', 'testPractices.')) {
+                    continue;
+                }
+
                 $messages[] = ['file' => str_replace($root, '', $file), 'line' => $message['line'], 'message' => $message['message'], 'identifier' => $message['identifier']];
             }
         }

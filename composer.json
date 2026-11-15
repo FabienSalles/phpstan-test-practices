@@ -35,6 +35,7 @@
             "FabienSalles\\PHPStanTestPractices\\Tests\\": "tests/"
         },
         "classmap": [
+            "tests/Fixtures/Corpus/stubs.php",
             "tests/Fixtures/Fix/",
             "tests/Fixtures/Rules/"
         ]

@@ -30,6 +30,10 @@ namespace Docs\ExpectExceptionBeforeAct\Failing;
 
 use PHPUnit\Framework\TestCase;
 
+final class AccountAlreadyClosed extends \LogicException
+{
+}
+
 final class Account
 {
     private string $status = 'OPEN';
@@ -37,7 +41,7 @@ final class Account
     public function close(): void
     {
         if ($this->status === 'CLOSED') {
-            throw new \LogicException('The account is already closed.');
+            throw new AccountAlreadyClosed('The account is already closed.');
         }
 
         $this->status = 'CLOSED';
@@ -51,11 +55,11 @@ final class Account
 
 final class AccountTest extends TestCase
 {
-    public function testRefusesToCloseTwice(): void
+    public function testThrowsAccountAlreadyClosedWhenClosingTwice(): void
     {
         $account = new Account();
         $account->close();
-        $this->expectException(\LogicException::class);
+        $this->expectException(AccountAlreadyClosed::class);
 
         $account->close();
         self::assertSame('CLOSED', $account->status());
@@ -66,7 +70,7 @@ final class AccountTest extends TestCase
 `vendor/bin/phpstan analyse --error-format=raw` reports (exit code 1):
 
 ```text
-tests/Fixtures/Docs/expectExceptionBeforeAct/Failing.php:37:Test testRefusesToCloseTwice() has statements after the act that follows expectException(): the act throws, so they never run.
+tests/Fixtures/Docs/expectExceptionBeforeAct/Failing.php:41:Test testThrowsAccountAlreadyClosedWhenClosingTwice() has statements after the act that follows expectException(): the act throws, so they never run.
 ```
 
 ## Passing example
@@ -80,6 +84,10 @@ namespace Docs\ExpectExceptionBeforeAct\Passing;
 
 use PHPUnit\Framework\TestCase;
 
+final class AccountAlreadyClosed extends \LogicException
+{
+}
+
 final class Account
 {
     private string $status = 'OPEN';
@@ -87,7 +95,7 @@ final class Account
     public function close(): void
     {
         if ($this->status === 'CLOSED') {
-            throw new \LogicException('The account is already closed.');
+            throw new AccountAlreadyClosed('The account is already closed.');
         }
 
         $this->status = 'CLOSED';
@@ -101,11 +109,11 @@ final class Account
 
 final class AccountTest extends TestCase
 {
-    public function testRefusesToCloseTwice(): void
+    public function testThrowsAccountAlreadyClosedWhenClosingTwice(): void
     {
         $account = new Account();
         $account->close();
-        $this->expectException(\LogicException::class);
+        $this->expectException(AccountAlreadyClosed::class);
 
         $account->close();
     }

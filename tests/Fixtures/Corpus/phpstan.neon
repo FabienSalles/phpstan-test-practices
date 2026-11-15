@@ -3,5 +3,3 @@ includes:
 
 parameters:
     level: 0
-    scanFiles:
-        - stubs.php

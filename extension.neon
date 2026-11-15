@@ -26,6 +26,13 @@ parameters:
             noStubReturnAsExpected: error
             noUnusedDouble: error
             noTestOfLogging: warning
+            frozenClock: error
+            dataProviderNamedKeys: error
+            exceptionTestNamesException: error
+            structuredAssertion: warning
+            builtInWebAssertions: warning
+            noKernelForPureFunction: warning
+            noTestCaseConstructor: error
         phpunitConfiguration: null
         testClassSuffix:
             suffix: Test
@@ -72,6 +79,13 @@ parametersSchema:
             noStubReturnAsExpected: anyOf('error', 'warning'),
             noUnusedDouble: anyOf('error', 'warning'),
             noTestOfLogging: anyOf('error', 'warning'),
+            frozenClock: anyOf('error', 'warning'),
+            dataProviderNamedKeys: anyOf('error', 'warning'),
+            exceptionTestNamesException: anyOf('error', 'warning'),
+            structuredAssertion: anyOf('error', 'warning'),
+            builtInWebAssertions: anyOf('error', 'warning'),
+            noKernelForPureFunction: anyOf('error', 'warning'),
+            noTestCaseConstructor: anyOf('error', 'warning'),
         }),
         phpunitConfiguration: schema(string(), nullable()),
         testClassSuffix: structure({
@@ -289,6 +303,62 @@ services:
         arguments:
             enabled: %testPractices.noTestOfLogging.enabled%
             severity: %testPractices.severity.noTestOfLogging%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\FrozenClockRule
+        arguments:
+            severity: %testPractices.severity.frozenClock%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\DataProviderNamedKeysRule
+        arguments:
+            severity: %testPractices.severity.dataProviderNamedKeys%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\ExceptionTestNamesExceptionRule
+        arguments:
+            severity: %testPractices.severity.exceptionTestNamesException%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\StructuredAssertionRule
+        arguments:
+            severity: %testPractices.severity.structuredAssertion%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\BuiltInWebAssertionsRule
+        arguments:
+            severity: %testPractices.severity.builtInWebAssertions%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoKernelForPureFunctionRule
+        arguments:
+            severity: %testPractices.severity.noKernelForPureFunction%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoTestCaseConstructorRule
+        arguments:
+            severity: %testPractices.severity.noTestCaseConstructor%
             level: %testPractices.level%
         tags:
             - phpstan.rules.rule

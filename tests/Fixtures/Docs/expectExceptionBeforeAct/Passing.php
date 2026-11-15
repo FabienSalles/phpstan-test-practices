@@ -6,6 +6,10 @@ namespace Docs\ExpectExceptionBeforeAct\Passing;
 
 use PHPUnit\Framework\TestCase;
 
+final class AccountAlreadyClosed extends \LogicException
+{
+}
+
 final class Account
 {
     private string $status = 'OPEN';
@@ -13,7 +17,7 @@ final class Account
     public function close(): void
     {
         if ($this->status === 'CLOSED') {
-            throw new \LogicException('The account is already closed.');
+            throw new AccountAlreadyClosed('The account is already closed.');
         }
 
         $this->status = 'CLOSED';
@@ -27,11 +31,11 @@ final class Account
 
 final class AccountTest extends TestCase
 {
-    public function testRefusesToCloseTwice(): void
+    public function testThrowsAccountAlreadyClosedWhenClosingTwice(): void
     {
         $account = new Account();
         $account->close();
-        $this->expectException(\LogicException::class);
+        $this->expectException(AccountAlreadyClosed::class);
 
         $account->close();
     }
