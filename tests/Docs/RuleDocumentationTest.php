@@ -45,7 +45,7 @@ final class RuleDocumentationTest extends TestCase
      */
     public static function provideRules(): iterable
     {
-        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount', 'testFileInTestsuite', 'testClassSuffix', 'testMethodIsDiscoverable', 'noTryCatchInTest', 'noControlFlowInTest', 'expectExceptionBeforeAct', 'noDependsBetweenTests', 'noFixtureInSetUp', 'permissiveStub', 'prophecyOverCreateMockCallback', 'dontMockWhatYouDontOwn', 'noStubReturnAsExpected', 'noUnusedDouble', 'noTestOfLogging', 'frozenClock', 'dataProviderNamedKeys', 'exceptionTestNamesException', 'structuredAssertion', 'builtInWebAssertions', 'noKernelForPureFunction', 'noTestCaseConstructor'] as $rule) {
+        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount', 'testFileInTestsuite', 'testClassSuffix', 'testMethodIsDiscoverable', 'noTryCatchInTest', 'noControlFlowInTest', 'expectExceptionBeforeAct', 'noDependsBetweenTests', 'noFixtureInSetUp', 'permissiveStub', 'prophecyOverCreateMockCallback', 'dontMockWhatYouDontOwn', 'noStubReturnAsExpected', 'noUnusedDouble', 'noTestOfLogging', 'frozenClock', 'dataProviderNamedKeys', 'exceptionTestNamesException', 'structuredAssertion', 'builtInWebAssertions', 'noKernelForPureFunction', 'noTestCaseConstructor', 'noReflectionOnSut', 'noRandomness', 'noDoubleOfEntityOrValueObject'] as $rule) {
             yield $rule => [$rule];
         }
     }

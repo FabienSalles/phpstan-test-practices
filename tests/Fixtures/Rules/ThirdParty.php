@@ -16,6 +16,18 @@ namespace Doctrine\ORM {
     }
 }
 
+namespace Doctrine\ORM\Mapping {
+    #[\Attribute(\Attribute::TARGET_CLASS)]
+    final class Entity
+    {
+    }
+
+    #[\Attribute(\Attribute::TARGET_CLASS)]
+    final class Embeddable
+    {
+    }
+}
+
 namespace Psr\Log {
     interface LoggerInterface
     {
