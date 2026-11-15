@@ -47,3 +47,9 @@ No comments in the code unless a non-obvious constraint demands one: the reasoni
 ## Commits
 
 [Conventional Commits](https://www.conventionalcommits.org/), in English: `feat: ...`, `fix: ...`, `test: ...`, `docs: ...`, `ci: ...`, `chore: ...`. One logical change per commit.
+
+## Skill links
+
+`docs/skills.md` maps every rule to the sections of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) that state its practice, and each rule page repeats it on its "Related skill" line. When you add a rule, add its row (a rule with no matching section says so; never invent a link) and its line.
+
+`composer check-skill-links` (`bin/check-skill-links.php`) fetches each linked `SKILL.md` from `raw.githubusercontent.com` at `main`, recomputes GitHub's heading anchors, and exits 1 naming every link whose file or heading is gone and every rule of `extension.neon` missing from `docs/skills.md`. A heading renamed in the marketplace breaks a link without any change here, so the check is not part of `composer ci`: `.github/workflows/skill-links.yml` runs it every Monday and on demand, and opens an issue titled "Broken skill links" (or adds the new report to the open one) when it fails. `tests/Tools/` covers the anchor computation and the parsing with an injected fetcher, without network.

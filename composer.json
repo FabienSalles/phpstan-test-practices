@@ -32,7 +32,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "FabienSalles\\PHPStanTestPractices\\Tests\\": "tests/"
+            "FabienSalles\\PHPStanTestPractices\\Tests\\": "tests/",
+            "FabienSalles\\PHPStanTestPractices\\Tools\\": "tools/"
         },
         "classmap": [
             "tests/Fixtures/Corpus/stubs.php",
@@ -52,6 +53,7 @@
     },
     "scripts": {
         "analyse": "phpstan analyse --no-progress --memory-limit=512M",
+        "check-skill-links": "php bin/check-skill-links.php",
         "ci": [
             "@composer validate --strict",
             "@test",
@@ -60,7 +62,8 @@
         "test": "phpunit"
     },
     "scripts-descriptions": {
-        "analyse": "Analyse src/ with PHPStan at level max",
+        "analyse": "Analyse src/, tools/ and bin/ with PHPStan at level max",
+        "check-skill-links": "Check that every rule maps to a skill and every skill link resolves",
         "ci": "Run every check the CI runs",
         "test": "Run the PHPUnit suite"
     }
