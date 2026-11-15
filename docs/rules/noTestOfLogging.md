@@ -4,6 +4,8 @@ No test of logging. Enabled from `testPractices.level` **3** (see [levels](../..
 
 Auto-fixable: no. Whether the log is the behaviour under test is an intention only the author knows.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 Disabled by default; enable it with:

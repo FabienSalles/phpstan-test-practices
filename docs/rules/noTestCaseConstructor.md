@@ -4,6 +4,8 @@ No test case constructor. Enabled from `testPractices.level` **1** (see [levels]
 
 Auto-fixable: no. What the constructor builds has to move into each test or into setUp(), depending on what it is.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 A `__construct()` declared in a `TestCase` subclass.

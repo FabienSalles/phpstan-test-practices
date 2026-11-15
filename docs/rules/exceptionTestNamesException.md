@@ -4,6 +4,8 @@ Exception test names the exception. Enabled from `testPractices.level` **2** (se
 
 Auto-fixable: no. The new name has to keep the condition part of the old one, which a fix cannot guess.
 
+Related skill: [php-test-conventions › PHP-specific: Exception Test Naming](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#php-specific-exception-test-naming).
+
 ## What it detects
 
 A test calling `expectException(X::class)` whose name does not contain the short class name `X`, compared case-insensitively. The name may also drop an `Exception` suffix and a `Cannot` prefix (`CannotSuspendBeneficiaryException` matches `...SuspendBeneficiary...`). When the argument is not a class constant (an exception class coming from a data provider), the rule does not apply.

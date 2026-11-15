@@ -4,6 +4,8 @@ Prefer an in-memory double. Enabled from `testPractices.level` **3** (see [level
 
 Auto-fixable: no. Writing the in-memory implementation is a design task.
 
+Related skill: [testing-principles › 11. Prefer a Real Implementation Over a Mocking Tool](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#11-prefer-a-real-implementation-over-a-mocking-tool), [php-test-conventions › test-doubles › Choosing a Double (in order)](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/references/test-doubles.md#choosing-a-double-in-order).
+
 ## What it detects
 
 A dependency doubled with `createMock`, `createStub`, `createConfiguredMock`, `createConfiguredStub`, `createPartialMock`, `getMockBuilder`, `getMockForAbstractClass` or `prophesize` on `X::class` in at least `threshold` test methods (2 by default) of the same concrete test class.

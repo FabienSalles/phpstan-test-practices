@@ -4,6 +4,8 @@ Permissive stub. Enabled from `testPractices.level` **3** (see [levels](../../RE
 
 Auto-fixable: no. Replacing a constraint by `Argument::any()` is mechanical, but whether the constraint was a hidden verification that deserves a spy is not.
 
+Related skill: [php-test-conventions › test-doubles › Prophecy Best Practices: Permissive Arrange, Strict Assert](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/references/test-doubles.md#prophecy-best-practices-permissive-arrange-strict-assert).
+
 ## What it detects
 
 A Prophecy stub (`$double->method(...)->willReturn(...)`, or any other `will*()`) whose arguments constrain the call: a literal, a variable, an object, or an `Argument::` matcher other than `Argument::any()` and `Argument::cetera()`. A PHPUnit stub configured with `->with(...)` and no `->expects(...)` is reported too.

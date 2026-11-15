@@ -4,6 +4,8 @@ Prophecy over a scripted PHPUnit double. Enabled from `testPractices.level` **3*
 
 Auto-fixable: no. Rewriting a callback into Prophecy promises means splitting its branches into one promise per argument.
 
+Related skill: [php-test-conventions › PHP-specific: Test Doubles](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#php-specific-test-doubles).
+
 ## What it detects
 
 A PHPUnit double (`createMock()`, `createStub()`, `getMockBuilder()`, `createPartialMock()`, `createConfigured*()`) stored in a variable of a test method, then scripted with `willReturnCallback()` or `will()`.

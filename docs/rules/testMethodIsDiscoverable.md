@@ -4,6 +4,8 @@ Test method is discoverable. Enabled from `testPractices.level` **0** (see [leve
 
 Auto-fixable: no. The finding is computed from collected data across files, and PHPStan attaches a fix only to the AST node of a rule that runs on that node. Add `#[Test]` (PHPUnit 10 and later) or the `test` prefix by hand.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 A method of a test class (or of its parents and traits) that contains assertions but that PHPUnit never runs: it has no `test` prefix, no `#[Test]` attribute and no `@test` annotation, and no test method reaches it.

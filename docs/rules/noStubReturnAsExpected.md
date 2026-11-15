@@ -4,6 +4,8 @@ No stub return value as expected value. Enabled from `testPractices.level` **0**
 
 Auto-fixable: no. What the test should expect instead depends on what the code under test computes.
 
+Related skill: [testing-principles › 10. Mocks Can Hide Real Bugs](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#10-mocks-can-hide-real-bugs).
+
 ## What it detects
 
 An assertion whose expected argument is a variable, or a `new` expression, that the same test passes to a stub's `willReturn()`, `willReturnMap()` or `willReturnOnConsecutiveCalls()` (PHPUnit or Prophecy).

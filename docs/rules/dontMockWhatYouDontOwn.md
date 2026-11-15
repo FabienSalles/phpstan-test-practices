@@ -4,6 +4,8 @@ Don't mock what you don't own. Enabled from `testPractices.level` **2** (see [le
 
 Auto-fixable: no. The fix is a port and an adapter in production code.
 
+Related skill: [testing-principles › 10. Mocks Can Hide Real Bugs](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#10-mocks-can-hide-real-bugs).
+
 ## What it detects
 
 A double (`createMock()`, `createStub()`, `prophesize()`...) of a third-party type listed in `testPractices.dontMockWhatYouDontOwn.classes`, or of a class implementing or extending one of them. The default list:

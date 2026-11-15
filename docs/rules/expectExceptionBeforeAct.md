@@ -4,6 +4,8 @@ Nothing after the throwing act. Enabled from `testPractices.level` **0** (see [l
 
 Auto-fixable: no. The statements after the act are assertions someone meant to run; deleting them would hide that intention instead of moving it to another test.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 A test method whose last `expectException*()` call (`expectException`, `expectExceptionMessage`, `expectExceptionCode`, `expectExceptionObject`...) is followed by more than one top-level statement. The statement right after the expectation is the act; it throws, so everything after it is dead code.

@@ -4,6 +4,8 @@ No control flow in a test. Enabled from `testPractices.level` **1** (see [levels
 
 Auto-fixable: no. Unrolling a loop or splitting a branch into separate tests is a design choice.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 An `if`, `for`, `foreach`, `while`, `do`/`while` or `switch` in a test method body, and a `match` whose arms call something, assign or throw (a `match` that only selects a value stays allowed). Closures, arrow functions and anonymous classes passed from the test (an `array_map()` callback, `Argument::that()`) are not inspected, and neither are helper methods.

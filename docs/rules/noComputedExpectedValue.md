@@ -4,6 +4,8 @@ No computed expected value. Enabled from `testPractices.level` **0** (see [level
 
 Auto-fixable: no. The literal would have to be computed by running the formula, which is exactly what the test must not trust.
 
+Related skill: [testing-principles › 2. What NOT to Test](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#2-what-not-to-test), [php-test-conventions › assertion-patterns › Asserting Computed Properties](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/references/assertion-patterns.md#asserting-computed-properties).
+
 ## What it detects
 
 An `assertSame()` or `assertEquals()` whose expected value (the first argument, or the variable assigned to it in the test) contains a `match`, a ternary, or arithmetic (`+`, `-`, `*`, `/`, `%`, `**`).

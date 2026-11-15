@@ -4,6 +4,8 @@ Named data provider keys. Enabled from `testPractices.level` **2** (see [levels]
 
 Auto-fixable: no. A name has to describe the case, which only the author can write.
 
+Related skill: [php-test-conventions › PHP-specific: Data Providers (PHPUnit syntax)](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#php-specific-data-providers-phpunit-syntax), [testing-principles › 7. Parameterized Tests (data provider / it.each)](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#7-parameterized-tests-data-provider--iteach).
+
 ## What it detects
 
 In a data provider of the same class (named by `#[DataProvider('...')]` or `@dataProvider`), a `yield` without a string key, or an item without a string key in a returned array literal. `yield from` and `#[TestWith]` are not checked.

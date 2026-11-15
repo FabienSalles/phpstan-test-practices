@@ -4,6 +4,8 @@ Assertion count. Enabled from `testPractices.level` **2** (see [levels](../../RE
 
 Auto-fixable: no. Merging assertions into one structured assertion needs to know which values belong together.
 
+Related skill: [testing-principles › 9. Structured Assertions Over Property-By-Property](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#9-structured-assertions-over-property-by-property), [php-test-conventions › PHP-specific: Assertion Patterns](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#php-specific-assertion-patterns).
+
 ## What it detects
 
 The number of assertions in a test method, anywhere in its body. An assertion nested in another one (an `Argument::that()` inside a spy verification) is not counted again. 1 is preferred, 2 is allowed, `warningFrom` (3) is a warning and `errorFrom` (4) an error.

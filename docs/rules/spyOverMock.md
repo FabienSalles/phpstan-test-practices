@@ -4,6 +4,8 @@ Spy over mock. Enabled from `testPractices.level` **3** (see [levels](../../READ
 
 Auto-fixable: partly. For a Prophecy expectation written as its own statement (`$double->method(...)->shouldBeCalled*()` or `->shouldNotBeCalled()`), `vendor/bin/phpstan analyse --fix` moves it after the last statement of the test as the matching spy verification (`shouldHaveBeenCalled*()`, `shouldNotHaveBeenCalled()`). An expectation chained with a stub (`->willReturn(...)->shouldBeCalled()`) and PHPUnit's `expects()` are not fixed: PHPUnit has no native spy.
 
+Related skill: [testing-principles › 6. Spy Over Mock (verify AFTER act)](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#6-spy-over-mock-verify-after-act), [php-test-conventions › PHP-specific: Spy Pattern (Prophecy)](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/SKILL.md#php-specific-spy-pattern-prophecy).
+
 ## What it detects
 
 A PHPUnit `expects()` (a mock: the verification is declared before the act). Prophecy spies, verified with `shouldHaveBeenCalled()` after the act, and hand-written doubles read after the act are not reported.

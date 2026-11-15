@@ -4,6 +4,8 @@ No production constant as expected value. Enabled from `testPractices.level` **1
 
 Auto-fixable: yes, when the constant's value is a scalar literal (string, int, float, `true`, `false`, `null`): `vendor/bin/phpstan analyse --fix` replaces the constant by its value, read through reflection. A constant whose value is an array or an expression is left alone.
 
+Related skill: [testing-principles › 2. What NOT to Test](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#2-what-not-to-test).
+
 ## What it detects
 
 A class constant of production code used as the **expected** argument of an assertion: the argument of an assertion method whose first parameter is named `$expected…` (`assertSame`, `assertEquals`, `assertNotSame`, `assertNotEquals`, `assertEqualsCanonicalizing`, `assertCount`, `assertJsonStringEqualsJsonString`...), passed positionally or as a named argument. The method is resolved through reflection on the test class, so the list follows the installed PHPUnit.

@@ -4,6 +4,8 @@ No fixture in setUp(). Enabled from `testPractices.level` **3** (see [levels](..
 
 Auto-fixable: no. Moving a shared object into each test that uses it needs to know which tests use it.
 
+Related skill: [testing-principles › 4. DAMP Over DRY](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#4-damp-over-dry).
+
 ## What it detects
 
 An assignment to a property (`$this->x = ...` or `self::$x = ...`) in `setUp()`, `setUpBeforeClass()` or a method carrying `#[Before]` or `#[BeforeClass]`, when the value is a test double (`createMock()`, `createStub()`, `prophesize()`, `getMockBuilder()`... including a chain built on them) or an object created with `new`. Calls such as `static::bootKernel()`, `static::createClient()` or `static::getContainer()` are not reported: they prepare the environment, not the scenario.

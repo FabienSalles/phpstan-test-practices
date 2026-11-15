@@ -4,6 +4,8 @@ Built-in web assertions. Enabled from `testPractices.level` **3** (see [levels](
 
 Auto-fixable: partly. `vendor/bin/phpstan analyse --fix` replaces `assertSame($code, $client->getResponse()->getStatusCode())` by `self::assertResponseStatusCodeSame($code)`. The selector cases are not fixed: their arguments move to another position and the trimming semantics differ.
 
+Related skill: [symfony-test-conventions › Use the built-in assertions before the crawler](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/symfony/skills/symfony-test-conventions/SKILL.md#use-the-built-in-assertions-before-the-crawler), [symfony-test-conventions › interface-assertions › The catalogue](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/symfony/skills/symfony-test-conventions/references/interface-assertions.md#the-catalogue).
+
 ## What it detects
 
 In a test class that provides Symfony's web assertions (it has `assertResponseStatusCodeSame()`, as `WebTestCase` does):

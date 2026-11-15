@@ -4,6 +4,8 @@ Test file in a test suite. Enabled from `testPractices.level` **0** (see [levels
 
 Auto-fixable: no. Whether to move the file, add a `<file>` entry or change a suite is a project decision.
 
+Related skill: [test-suite-design › 8. Run Every Test File in Exactly One Check](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/test-suite-design/SKILL.md#8-run-every-test-file-in-exactly-one-check).
+
 ## What it detects
 
 A concrete `TestCase` subclass whose file is not collected by any `<testsuite>` of the PHPUnit configuration. A file is collected when it is listed in a `<file>` element, or when it is under a `<directory>` and its name starts with the directory's `prefix` (empty by default) and ends with its `suffix` (`Test.php` by default), and in both cases is not under an `<exclude>` of the same suite.

@@ -4,6 +4,8 @@ Frozen clock. Enabled from `testPractices.level` **1** (see [levels](../../READM
 
 Auto-fixable: no. The absolute date to use, and how to inject a clock into the code under test, are choices of the test author.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 A read of the system clock in any method of a test class (tests, helpers, data providers, `setUp()`):

@@ -4,6 +4,8 @@ Structured assertion. Enabled from `testPractices.level` **2** (see [levels](../
 
 Auto-fixable: no. Building the expected object or array needs to know its constructor or its shape.
 
+Related skill: [testing-principles › 9. Structured Assertions Over Property-By-Property](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/craft/skills/testing-principles/SKILL.md#9-structured-assertions-over-property-by-property), [php-test-conventions › assertion-patterns › assertEquals with Expected Object](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/phpunit/skills/php-test-conventions/references/assertion-patterns.md#assertequals-with-expected-object).
+
 ## What it detects
 
 In a test with exactly two assertions, two consecutive `assertSame()`, `assertEquals()`, `assertCount()`, `assertTrue()`, `assertFalse()` or `assertNull()` whose actual value is a field of the same variable: a property (`$customer->name`), a getter without argument (`$customer->isVip()`) or an array key (`$payload['status']`). From three assertions on, `assertionCount` takes over.

@@ -4,6 +4,8 @@ No kernel for a pure function. Enabled from `testPractices.level` **3** (see [le
 
 Auto-fixable: no. Changing the parent class may require removing kernel-specific code from the test.
 
+Related skill: [symfony-test-conventions › Picking a base class](https://github.com/FabienSalles/claude-marketplace/blob/main/plugins/symfony/skills/symfony-test-conventions/SKILL.md#picking-a-base-class).
+
 ## What it detects
 
 A concrete test class extending Symfony's `KernelTestCase` or `WebTestCase` directly, whose own body never calls `bootKernel()`, `getContainer()`, `createClient()`, `createKernel()` or `getClient()`, nor reads a `client` property. Classes extending a project base class are skipped, since the base class may boot the kernel for them.

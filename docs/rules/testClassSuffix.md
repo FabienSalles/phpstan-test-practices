@@ -4,6 +4,8 @@ Test class suffix. Enabled from `testPractices.level` **0** (see [levels](../../
 
 Auto-fixable: no. Renaming the class means renaming its file, which a PHPStan fix cannot do.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 A concrete (non-abstract, non-anonymous) `TestCase` subclass whose name does not end with `testClassSuffix.suffix` (`Test` by default). Abstract base classes (`OrderTestCase`) are not reported.

@@ -4,6 +4,8 @@ No try/catch in a test. Enabled from `testPractices.level` **0** (see [levels](.
 
 Auto-fixable: no. Turning the catch block into `expectException()` / `expectExceptionMessage()` needs to know which assertions of the catch block are the expectation.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 A `try` with at least one `catch` in a test method body (closures and anonymous classes excluded). Two forms are allowed:

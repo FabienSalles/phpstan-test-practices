@@ -139,7 +139,7 @@ parameters:
 
 A test method is a public, non-static method of a `TestCase` subclass named `test*`, or carrying `#[Test]` or `@test`. Data providers (static) are never treated as tests. Assertions are `assert*` calls through `self::`, `static::`, `SomeClass::` or `$this->`, and Prophecy spy verifications (`shouldHaveBeenCalled()`, `shouldHaveBeenCalledTimes()`, `shouldHaveBeenCalledOnce()`, `shouldNotHaveBeenCalled()`, `shouldHave()`).
 
-Each rule has its own page: what it detects, a failing example with the real PHPStan output, a passing example, the reasoning behind it, its known limits.
+Each rule has its own page: what it detects, a failing example with the real PHPStan output, a passing example, the reasoning behind it, its known limits, and the [skill](docs/skills.md) of the [Claude Code marketplace](https://github.com/FabienSalles/claude-marketplace) that teaches the same practice.
 
 | Identifier | Level | Default | Rationale |
 |---|---|---|---|

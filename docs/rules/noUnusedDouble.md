@@ -4,6 +4,8 @@ No unused double. Enabled from `testPractices.level` **1** (see [levels](../../R
 
 Auto-fixable: no. Removing the assignment is mechanical, but an unused double is as often a forgotten argument of the code under test as a leftover.
 
+Related skill: none: no section of the [marketplace skills](https://github.com/FabienSalles/claude-marketplace) states this practice yet.
+
 ## What it detects
 
 A variable of a test method assigned from a double factory (`createMock()`, `createStub()`, `prophesize()`, `getMockBuilder()...->getMock()`...) or from an anonymous class, and never read afterwards: not passed as an argument, not called, not captured by a closure.
