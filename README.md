@@ -101,6 +101,9 @@ parameters:
             builtInWebAssertions: warning
             noKernelForPureFunction: warning
             noTestCaseConstructor: error
+            noReflectionOnSut: error
+            noRandomness: error
+            noDoubleOfEntityOrValueObject: error
         phpunitConfiguration: null
         testClassSuffix:
             suffix: Test
@@ -114,6 +117,10 @@ parameters:
                 - Symfony\Contracts\HttpClient\HttpClientInterface
         noTestOfLogging:
             enabled: false
+        noDoubleOfEntityOrValueObject:
+            patterns:
+                - App\Entity\*
+                - '*\ValueObject\*'
         preferInMemoryDouble:
             threshold: 2
         assertionCount:
@@ -131,6 +138,7 @@ parameters:
 | `testClassSuffix.suffix` | string | Suffix every concrete test class must end with |
 | `dontMockWhatYouDontOwn.classes` | list of class names | Third-party types that must not be doubled (subclasses and implementations included) |
 | `noTestOfLogging.enabled` | bool | Turns on the opt-in `noTestOfLogging` rule |
+| `noDoubleOfEntityOrValueObject.patterns` | list of `fnmatch()` patterns | Classes that must be built, not doubled, besides Doctrine entities, enums and readonly classes |
 | `preferInMemoryDouble.threshold` | int ≥ 1 | Number of test methods doubling the same class before it is reported |
 | `assertionCount.warningFrom` | int ≥ 1 | Assertions per test from which a warning is reported |
 | `assertionCount.errorFrom` | int ≥ 1 | Assertions per test from which an error is reported |
@@ -158,12 +166,15 @@ Each rule has its own page: what it detects, a failing example with the real PHP
 | [`testPractices.frozenClock`](docs/rules/frozenClock.md) | 1 | error | A test reading the system clock depends on when it runs |
 | [`testPractices.noUnusedDouble`](docs/rules/noUnusedDouble.md) | 1 | error | An unused double is noise, or a forgotten argument of the act |
 | [`testPractices.noTestCaseConstructor`](docs/rules/noTestCaseConstructor.md) | 1 | error | PHPUnit owns the constructor of a test case |
+| [`testPractices.noRandomness`](docs/rules/noRandomness.md) | 1 | error | A test drawing random values may behave differently on every run |
 | [`testPractices.oneVerifiedDoublePerTest`](docs/rules/oneVerifiedDoublePerTest.md) | 2 | error | Several verified doubles mean several intentions in one test |
 | [`testPractices.assertionCount`](docs/rules/assertionCount.md) | 2 | 3: warning, 4+: error | One structured assertion reads better and fails with a complete diff; many assertions usually hide several intentions |
 | [`testPractices.structuredAssertion`](docs/rules/structuredAssertion.md) | 2 | warning | Two assertions on fields of one value hide the second difference |
 | [`testPractices.dontMockWhatYouDontOwn`](docs/rules/dontMockWhatYouDontOwn.md) | 2 | error | A double of a library type copies how the library is called |
 | [`testPractices.dataProviderNamedKeys`](docs/rules/dataProviderNamedKeys.md) | 2 | error | An unnamed data set fails as "data set #0" |
 | [`testPractices.exceptionTestNamesException`](docs/rules/exceptionTestNamesException.md) | 2 | error | An exception test names the error it expects |
+| [`testPractices.noReflectionOnSut`](docs/rules/noReflectionOnSut.md) | 2 | error | Reaching private state couples the test to how the class is written |
+| [`testPractices.noDoubleOfEntityOrValueObject`](docs/rules/noDoubleOfEntityOrValueObject.md) | 2 | error | An entity or a value object is built, not doubled |
 | [`testPractices.spyOverMock`](docs/rules/spyOverMock.md) | 3 | warning | A verification set before the act (mock) breaks arrange-act-assert; a spy verifies after the act |
 | [`testPractices.preferInMemoryDouble`](docs/rules/preferInMemoryDouble.md) | 3 | warning | The same dependency doubled in several tests is a sign that a reusable in-memory implementation would be shorter and sturdier |
 | [`testPractices.noFixtureInSetUp`](docs/rules/noFixtureInSetUp.md) | 3 | warning | Fixtures and doubles built in setUp() hide each scenario |
@@ -182,8 +193,8 @@ Four rules can fix what they report: `noProductionConstantAsExpected` (the const
 | Level | Adds | Why at this level |
 |---|---|---|
 | 0 | `testFileInTestsuite`, `testClassSuffix`, `testMethodIsDiscoverable`, `assertionsLast`, `noComputedExpectedValue`, `noStubReturnAsExpected`, `noTryCatchInTest`, `expectExceptionBeforeAct` | A test that never runs, an expectation that passes by construction (computed, or returned by a stub), an assertion that never executes (in the arrange, after a throwing act, in a skipped catch): each makes a test lie, with almost no false positive |
-| 1 | `noGuardAssertion`, `noProductionConstantAsExpected`, `noControlFlowInTest`, `noDependsBetweenTests`, `frozenClock`, `noUnusedDouble`, `noTestCaseConstructor` | Tautologies, hidden diffs, flaky or dependent tests and noise, with a few legitimate exceptions (a constant that is the contract, a loop building a fixture) |
-| 2 | `oneVerifiedDoublePerTest`, `assertionCount`, `structuredAssertion`, `dontMockWhatYouDontOwn`, `dataProviderNamedKeys`, `exceptionTestNamesException` | Heuristics about intentions, naming and design: valuable, but thresholds, interaction-heavy tests and project conventions make exceptions more common |
+| 1 | `noGuardAssertion`, `noProductionConstantAsExpected`, `noControlFlowInTest`, `noDependsBetweenTests`, `frozenClock`, `noUnusedDouble`, `noTestCaseConstructor`, `noRandomness` | Tautologies, hidden diffs, flaky or dependent tests and noise, with a few legitimate exceptions (a constant that is the contract, a loop building a fixture) |
+| 2 | `oneVerifiedDoublePerTest`, `assertionCount`, `structuredAssertion`, `dontMockWhatYouDontOwn`, `dataProviderNamedKeys`, `exceptionTestNamesException`, `noReflectionOnSut`, `noDoubleOfEntityOrValueObject` | Heuristics about intentions, naming and design: valuable, but thresholds, interaction-heavy tests and project conventions make exceptions more common |
 | 3 (`max`, default) | `spyOverMock`, `preferInMemoryDouble`, `noFixtureInSetUp`, `permissiveStub`, `prophecyOverCreateMockCallback`, `builtInWebAssertions`, `noKernelForPureFunction`, `noTestOfLogging` | Design preferences, warnings by default |
 
 ```neon

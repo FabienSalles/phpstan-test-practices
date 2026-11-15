@@ -33,6 +33,9 @@ parameters:
             builtInWebAssertions: warning
             noKernelForPureFunction: warning
             noTestCaseConstructor: error
+            noReflectionOnSut: error
+            noRandomness: error
+            noDoubleOfEntityOrValueObject: error
         phpunitConfiguration: null
         testClassSuffix:
             suffix: Test
@@ -46,6 +49,10 @@ parameters:
                 - Symfony\Contracts\HttpClient\HttpClientInterface
         noTestOfLogging:
             enabled: false
+        noDoubleOfEntityOrValueObject:
+            patterns:
+                - App\Entity\*
+                - '*\ValueObject\*'
         preferInMemoryDouble:
             threshold: 2
         assertionCount:
@@ -86,6 +93,9 @@ parametersSchema:
             builtInWebAssertions: anyOf('error', 'warning'),
             noKernelForPureFunction: anyOf('error', 'warning'),
             noTestCaseConstructor: anyOf('error', 'warning'),
+            noReflectionOnSut: anyOf('error', 'warning'),
+            noRandomness: anyOf('error', 'warning'),
+            noDoubleOfEntityOrValueObject: anyOf('error', 'warning'),
         }),
         phpunitConfiguration: schema(string(), nullable()),
         testClassSuffix: structure({
@@ -96,6 +106,9 @@ parametersSchema:
         }),
         noTestOfLogging: structure({
             enabled: bool(),
+        }),
+        noDoubleOfEntityOrValueObject: structure({
+            patterns: listOf(string()),
         }),
         preferInMemoryDouble: structure({
             threshold: schema(int(), min(1)),
@@ -359,6 +372,31 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\NoTestCaseConstructorRule
         arguments:
             severity: %testPractices.severity.noTestCaseConstructor%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoReflectionOnSutRule
+        arguments:
+            severity: %testPractices.severity.noReflectionOnSut%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoRandomnessRule
+        arguments:
+            severity: %testPractices.severity.noRandomness%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoDoubleOfEntityOrValueObjectRule
+        arguments:
+            patterns: %testPractices.noDoubleOfEntityOrValueObject.patterns%
+            severity: %testPractices.severity.noDoubleOfEntityOrValueObject%
             level: %testPractices.level%
         tags:
             - phpstan.rules.rule
