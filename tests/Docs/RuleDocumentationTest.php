@@ -42,7 +42,7 @@ final class RuleDocumentationTest extends TestCase
      */
     public static function provideRules(): iterable
     {
-        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount', 'testFileInTestsuite', 'testClassSuffix', 'testMethodIsDiscoverable', 'noTryCatchInTest', 'noControlFlowInTest', 'expectExceptionBeforeAct', 'noDependsBetweenTests'] as $rule) {
+        foreach (['assertionsLast', 'noGuardAssertion', 'noComputedExpectedValue', 'noProductionConstantAsExpected', 'oneVerifiedDoublePerTest', 'spyOverMock', 'preferInMemoryDouble', 'assertionCount', 'testFileInTestsuite', 'testClassSuffix', 'testMethodIsDiscoverable', 'noTryCatchInTest', 'noControlFlowInTest', 'expectExceptionBeforeAct', 'noDependsBetweenTests', 'noFixtureInSetUp', 'permissiveStub', 'prophecyOverCreateMockCallback', 'dontMockWhatYouDontOwn', 'noStubReturnAsExpected', 'noUnusedDouble', 'noTestOfLogging'] as $rule) {
             yield $rule => [$rule];
         }
     }

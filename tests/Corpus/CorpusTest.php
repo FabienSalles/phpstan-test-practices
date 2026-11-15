@@ -32,6 +32,9 @@ final class CorpusTest extends TestCase
             'expectedFindings' => [
                 'Calculator/OrderDiscountCalculatorTest.php:30 testPractices.noComputedExpectedValue',
                 'Controller/OrderControllerTest.php:21 testPractices.noProductionConstantAsExpected',
+                'Processor/OrderProcessorTest.php:25 testPractices.noFixtureInSetUp',
+                'Processor/OrderProcessorTest.php:26 testPractices.noFixtureInSetUp',
+                'Processor/OrderProcessorTest.php:27 testPractices.noFixtureInSetUp',
                 'Processor/OrderProcessorTest.php:30 testPractices.assertionCount',
                 'Processor/OrderProcessorTest.php:30 testPractices.oneVerifiedDoublePerTest',
                 'Processor/OrderProcessorTest.php:35 testPractices.spyOverMock',
@@ -41,6 +44,11 @@ final class CorpusTest extends TestCase
                 'Processor/OrderProcessorTest.php:46 testPractices.assertionsLast',
                 'Processor/OrderProcessorTest.php:47 testPractices.assertionsLast',
                 'Processor/OrderProcessorTest.php:50 testPractices.spyOverMock',
+                'Repository/OrderRepositoryMockTest.php:21 testPractices.dontMockWhatYouDontOwn',
+                'Repository/OrderRepositoryMockTest.php:24 testPractices.dontMockWhatYouDontOwn',
+                'Repository/OrderRepositoryMockTest.php:30 testPractices.dontMockWhatYouDontOwn',
+                'Repository/OrderRepositoryMockTest.php:30 testPractices.noUnusedDouble',
+                'Service/OrderImporterTest.php:46 testPractices.noStubReturnAsExpected',
             ],
         ];
 
@@ -52,6 +60,10 @@ final class CorpusTest extends TestCase
                 'Processor/OrderProcessorTest.php:22 testPractices.spyOverMock',
                 'Processor/OrderProcessorTest.php:89 testPractices.preferInMemoryDouble',
                 'Processor/OrderProcessorTest.php:90 testPractices.preferInMemoryDouble',
+                'Repository/OrderRepositoryMockTest.php:21 testPractices.dontMockWhatYouDontOwn',
+                'Repository/OrderRepositoryMockTest.php:24 testPractices.dontMockWhatYouDontOwn',
+                'Repository/OrderRepositoryMockTest.php:30 testPractices.dontMockWhatYouDontOwn',
+                'Repository/OrderRepositoryMockTest.php:30 testPractices.noUnusedDouble',
             ],
         ];
 

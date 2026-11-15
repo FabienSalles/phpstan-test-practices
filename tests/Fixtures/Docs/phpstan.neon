@@ -5,3 +5,5 @@ parameters:
     level: 0
     testPractices:
         errorFormat: raw
+        noTestOfLogging:
+            enabled: true

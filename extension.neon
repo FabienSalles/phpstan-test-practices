@@ -19,9 +19,26 @@ parameters:
             noControlFlowInTest: error
             expectExceptionBeforeAct: error
             noDependsBetweenTests: error
+            noFixtureInSetUp: warning
+            permissiveStub: warning
+            prophecyOverCreateMockCallback: warning
+            dontMockWhatYouDontOwn: error
+            noStubReturnAsExpected: error
+            noUnusedDouble: error
+            noTestOfLogging: warning
         phpunitConfiguration: null
         testClassSuffix:
             suffix: Test
+        dontMockWhatYouDontOwn:
+            classes:
+                - Doctrine\ORM\QueryBuilder
+                - Doctrine\ORM\EntityManagerInterface
+                - Doctrine\ORM\Query
+                - Doctrine\DBAL\Connection
+                - GuzzleHttp\ClientInterface
+                - Symfony\Contracts\HttpClient\HttpClientInterface
+        noTestOfLogging:
+            enabled: false
         preferInMemoryDouble:
             threshold: 2
         assertionCount:
@@ -48,10 +65,23 @@ parametersSchema:
             noControlFlowInTest: anyOf('error', 'warning'),
             expectExceptionBeforeAct: anyOf('error', 'warning'),
             noDependsBetweenTests: anyOf('error', 'warning'),
+            noFixtureInSetUp: anyOf('error', 'warning'),
+            permissiveStub: anyOf('error', 'warning'),
+            prophecyOverCreateMockCallback: anyOf('error', 'warning'),
+            dontMockWhatYouDontOwn: anyOf('error', 'warning'),
+            noStubReturnAsExpected: anyOf('error', 'warning'),
+            noUnusedDouble: anyOf('error', 'warning'),
+            noTestOfLogging: anyOf('error', 'warning'),
         }),
         phpunitConfiguration: schema(string(), nullable()),
         testClassSuffix: structure({
             suffix: string(),
+        }),
+        dontMockWhatYouDontOwn: structure({
+            classes: listOf(string()),
+        }),
+        noTestOfLogging: structure({
+            enabled: bool(),
         }),
         preferInMemoryDouble: structure({
             threshold: schema(int(), min(1)),
@@ -201,6 +231,64 @@ services:
         class: FabienSalles\PHPStanTestPractices\Rules\NoDependsBetweenTestsRule
         arguments:
             severity: %testPractices.severity.noDependsBetweenTests%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoFixtureInSetUpRule
+        arguments:
+            severity: %testPractices.severity.noFixtureInSetUp%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\PermissiveStubRule
+        arguments:
+            severity: %testPractices.severity.permissiveStub%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\ProphecyOverCreateMockCallbackRule
+        arguments:
+            severity: %testPractices.severity.prophecyOverCreateMockCallback%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\DontMockWhatYouDontOwnRule
+        arguments:
+            classes: %testPractices.dontMockWhatYouDontOwn.classes%
+            severity: %testPractices.severity.dontMockWhatYouDontOwn%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoStubReturnAsExpectedRule
+        arguments:
+            severity: %testPractices.severity.noStubReturnAsExpected%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoUnusedDoubleRule
+        arguments:
+            severity: %testPractices.severity.noUnusedDouble%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoTestOfLoggingRule
+        arguments:
+            enabled: %testPractices.noTestOfLogging.enabled%
+            severity: %testPractices.severity.noTestOfLogging%
             level: %testPractices.level%
         tags:
             - phpstan.rules.rule
