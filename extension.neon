@@ -1,0 +1,364 @@
+parameters:
+    errorFormat: testPractices
+    testPractices:
+        level: max
+        errorFormat: table
+        diffBase: null
+        severity:
+            assertionsLast: error
+            noGuardAssertion: error
+            noComputedExpectedValue: error
+            noProductionConstantAsExpected: error
+            oneVerifiedDoublePerTest: error
+            spyOverMock: warning
+            preferInMemoryDouble: warning
+            testMethodIsDiscoverable: error
+            testClassSuffix: error
+            testFileInTestsuite: error
+            noTryCatchInTest: error
+            noControlFlowInTest: error
+            expectExceptionBeforeAct: error
+            noDependsBetweenTests: error
+            noFixtureInSetUp: warning
+            permissiveStub: warning
+            prophecyOverCreateMockCallback: warning
+            dontMockWhatYouDontOwn: error
+            noStubReturnAsExpected: error
+            noUnusedDouble: error
+            noTestOfLogging: warning
+            frozenClock: error
+            dataProviderNamedKeys: error
+            exceptionTestNamesException: error
+            structuredAssertion: warning
+            builtInWebAssertions: warning
+            noKernelForPureFunction: warning
+            noTestCaseConstructor: error
+        phpunitConfiguration: null
+        testClassSuffix:
+            suffix: Test
+        dontMockWhatYouDontOwn:
+            classes:
+                - Doctrine\ORM\QueryBuilder
+                - Doctrine\ORM\EntityManagerInterface
+                - Doctrine\ORM\Query
+                - Doctrine\DBAL\Connection
+                - GuzzleHttp\ClientInterface
+                - Symfony\Contracts\HttpClient\HttpClientInterface
+        noTestOfLogging:
+            enabled: false
+        preferInMemoryDouble:
+            threshold: 2
+        assertionCount:
+            warningFrom: 3
+            errorFrom: 4
+
+parametersSchema:
+    testPractices: structure({
+        level: anyOf(schema(int(), min(0), max(3)), 'max'),
+        errorFormat: string(),
+        diffBase: schema(string(), nullable()),
+        severity: structure({
+            assertionsLast: anyOf('error', 'warning'),
+            noGuardAssertion: anyOf('error', 'warning'),
+            noComputedExpectedValue: anyOf('error', 'warning'),
+            noProductionConstantAsExpected: anyOf('error', 'warning'),
+            oneVerifiedDoublePerTest: anyOf('error', 'warning'),
+            spyOverMock: anyOf('error', 'warning'),
+            preferInMemoryDouble: anyOf('error', 'warning'),
+            testMethodIsDiscoverable: anyOf('error', 'warning'),
+            testClassSuffix: anyOf('error', 'warning'),
+            testFileInTestsuite: anyOf('error', 'warning'),
+            noTryCatchInTest: anyOf('error', 'warning'),
+            noControlFlowInTest: anyOf('error', 'warning'),
+            expectExceptionBeforeAct: anyOf('error', 'warning'),
+            noDependsBetweenTests: anyOf('error', 'warning'),
+            noFixtureInSetUp: anyOf('error', 'warning'),
+            permissiveStub: anyOf('error', 'warning'),
+            prophecyOverCreateMockCallback: anyOf('error', 'warning'),
+            dontMockWhatYouDontOwn: anyOf('error', 'warning'),
+            noStubReturnAsExpected: anyOf('error', 'warning'),
+            noUnusedDouble: anyOf('error', 'warning'),
+            noTestOfLogging: anyOf('error', 'warning'),
+            frozenClock: anyOf('error', 'warning'),
+            dataProviderNamedKeys: anyOf('error', 'warning'),
+            exceptionTestNamesException: anyOf('error', 'warning'),
+            structuredAssertion: anyOf('error', 'warning'),
+            builtInWebAssertions: anyOf('error', 'warning'),
+            noKernelForPureFunction: anyOf('error', 'warning'),
+            noTestCaseConstructor: anyOf('error', 'warning'),
+        }),
+        phpunitConfiguration: schema(string(), nullable()),
+        testClassSuffix: structure({
+            suffix: string(),
+        }),
+        dontMockWhatYouDontOwn: structure({
+            classes: listOf(string()),
+        }),
+        noTestOfLogging: structure({
+            enabled: bool(),
+        }),
+        preferInMemoryDouble: structure({
+            threshold: schema(int(), min(1)),
+        }),
+        assertionCount: structure({
+            warningFrom: schema(int(), min(1)),
+            errorFrom: schema(int(), min(1)),
+        }),
+    })
+
+services:
+    errorFormatter.testPractices:
+        class: FabienSalles\PHPStanTestPractices\Severity\SeverityErrorFormatter
+        arguments:
+            innerFormat: %testPractices.errorFormat%
+            diffBase: %testPractices.diffBase%
+            workingDirectory: %currentWorkingDirectory%
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\AssertionsLastRule
+        arguments:
+            severity: %testPractices.severity.assertionsLast%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoGuardAssertionRule
+        arguments:
+            severity: %testPractices.severity.noGuardAssertion%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoComputedExpectedValueRule
+        arguments:
+            severity: %testPractices.severity.noComputedExpectedValue%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoProductionConstantAsExpectedRule
+        arguments:
+            severity: %testPractices.severity.noProductionConstantAsExpected%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\OneVerifiedDoublePerTestRule
+        arguments:
+            severity: %testPractices.severity.oneVerifiedDoublePerTest%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\SpyOverMockRule
+        arguments:
+            severity: %testPractices.severity.spyOverMock%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Collectors\TestCaseCollector
+        tags:
+            - phpstan.collector
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Collectors\TestCaseMethodCollector
+        tags:
+            - phpstan.collector
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\PreferInMemoryDoubleRule
+        arguments:
+            threshold: %testPractices.preferInMemoryDouble.threshold%
+            severity: %testPractices.severity.preferInMemoryDouble%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\AssertionCountRule
+        arguments:
+            warningFrom: %testPractices.assertionCount.warningFrom%
+            errorFrom: %testPractices.assertionCount.errorFrom%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\TestMethodIsDiscoverableRule
+        arguments:
+            severity: %testPractices.severity.testMethodIsDiscoverable%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\TestClassSuffixRule
+        arguments:
+            suffix: %testPractices.testClassSuffix.suffix%
+            severity: %testPractices.severity.testClassSuffix%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\TestFileInTestsuiteRule
+        arguments:
+            configuration: %testPractices.phpunitConfiguration%
+            workingDirectory: %currentWorkingDirectory%
+            severity: %testPractices.severity.testFileInTestsuite%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoTryCatchInTestRule
+        arguments:
+            severity: %testPractices.severity.noTryCatchInTest%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoControlFlowInTestRule
+        arguments:
+            severity: %testPractices.severity.noControlFlowInTest%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\ExpectExceptionBeforeActRule
+        arguments:
+            severity: %testPractices.severity.expectExceptionBeforeAct%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoDependsBetweenTestsRule
+        arguments:
+            severity: %testPractices.severity.noDependsBetweenTests%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoFixtureInSetUpRule
+        arguments:
+            severity: %testPractices.severity.noFixtureInSetUp%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\PermissiveStubRule
+        arguments:
+            severity: %testPractices.severity.permissiveStub%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\ProphecyOverCreateMockCallbackRule
+        arguments:
+            severity: %testPractices.severity.prophecyOverCreateMockCallback%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\DontMockWhatYouDontOwnRule
+        arguments:
+            classes: %testPractices.dontMockWhatYouDontOwn.classes%
+            severity: %testPractices.severity.dontMockWhatYouDontOwn%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoStubReturnAsExpectedRule
+        arguments:
+            severity: %testPractices.severity.noStubReturnAsExpected%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoUnusedDoubleRule
+        arguments:
+            severity: %testPractices.severity.noUnusedDouble%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoTestOfLoggingRule
+        arguments:
+            enabled: %testPractices.noTestOfLogging.enabled%
+            severity: %testPractices.severity.noTestOfLogging%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\FrozenClockRule
+        arguments:
+            severity: %testPractices.severity.frozenClock%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\DataProviderNamedKeysRule
+        arguments:
+            severity: %testPractices.severity.dataProviderNamedKeys%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\ExceptionTestNamesExceptionRule
+        arguments:
+            severity: %testPractices.severity.exceptionTestNamesException%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\StructuredAssertionRule
+        arguments:
+            severity: %testPractices.severity.structuredAssertion%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\BuiltInWebAssertionsRule
+        arguments:
+            severity: %testPractices.severity.builtInWebAssertions%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoKernelForPureFunctionRule
+        arguments:
+            severity: %testPractices.severity.noKernelForPureFunction%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule
+
+    -
+        class: FabienSalles\PHPStanTestPractices\Rules\NoTestCaseConstructorRule
+        arguments:
+            severity: %testPractices.severity.noTestCaseConstructor%
+            level: %testPractices.level%
+        tags:
+            - phpstan.rules.rule

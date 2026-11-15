@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Fixtures\Fix\NoProductionConstantAsExpected;
+
+use PHPUnit\Framework\TestCase;
+
+final class Order
+{
+    public const STATUS = 'CONFIRMED';
+    public const LIMIT = 10;
+    public const RATE = 0.5;
+    public const ACTIVE = true;
+    public const NONE = null;
+    public const STATUSES = ['CONFIRMED'];
+}
+
+final class OrderTest extends TestCase
+{
+    public function testFixesScalarConstants(): void
+    {
+        $order = new Order();
+
+        self::assertSame('CONFIRMED', $order::STATUS);
+        self::assertSame(10, $order::LIMIT);
+        self::assertSame(0.5, $order::RATE);
+        self::assertSame(true, $order::ACTIVE);
+        self::assertSame(null, $order::NONE);
+        self::assertSame(Order::STATUSES, $order::STATUSES);
+    }
+}
